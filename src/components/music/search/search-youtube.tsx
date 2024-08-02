@@ -3,23 +3,35 @@ import { Input } from "../../ui/input.tsx";
 import SearchResultItem from "./search-result-item.tsx";
 import { FormDescription, FormLabel } from "../../ui/form.tsx";
 import { ScrollArea } from "../../ui/scroll-area.tsx";
-import lodash from "lodash";
-const SEARCH_URL =
-  "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&type=video&key=AIzaSyAvZRV0g5K43qALbQdp9Zy5NW1VQ-Bq18I";
+import { fetchWrapper } from "../../../utils/fetchWrapper.ts";
+import { MINIMUM_SEARCH_LENGTH } from "../../../lib/constants.ts";
 
 const SearchYoutube = () => {
-  const [videos, setVideos] = useState<Array>([]);
-  const debouncedSearch = lodash.debounce(search, 500);
+  const [videos, setVideos] = useState<[]>([]);
+  const [searchInfo, setSearchInfo] = useState("Videos will appear here");
 
   async function search(keywords: string) {
-    // search youtube api
-    console.log(keywords);
-    console.log(videos);
+    if (keywords.length < MINIMUM_SEARCH_LENGTH) {
+      setSearchInfo(
+        `Please enter at least ${MINIMUM_SEARCH_LENGTH} characters`
+      );
+      setVideos([]);
+      return;
+    }
 
     try {
-      const response = await fetch(`${SEARCH_URL}&q=${keywords}`);
-      const data = await response.json();
-      if (data.items) setVideos(data.items);
+      const response = await fetchWrapper.get(
+        "http://localhost:3000/search-video?" +
+          new URLSearchParams({ keywords: keywords })
+      );
+
+      if (response.items.length > 0) setVideos(response.items);
+      else {
+        setSearchInfo("No videos found");
+        if (videos.length > 0) {
+          setVideos([]);
+        }
+      }
     } catch (e) {
       console.log(e);
     }
@@ -32,7 +44,9 @@ const SearchYoutube = () => {
       <Input
         className="text-white my-2 w-full"
         placeholder="Search for a video"
-        onChange={(e) => debouncedSearch(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") search(e.target.value);
+        }}
       />
       <FormDescription>
         Search for a video to add to your library.
@@ -41,7 +55,7 @@ const SearchYoutube = () => {
       <div className="mt-4 border border-dashed border-secondary py-4 rounded-md ">
         {videos && videos.length === 0 ? (
           <div className="text-muted-foreground text-sm text-center">
-            No videos found
+            {searchInfo}
           </div>
         ) : (
           <ScrollArea className="h-64 max-h-64">

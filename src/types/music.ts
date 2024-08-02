@@ -3,8 +3,8 @@ import { User } from "./index.ts";
 
 export type Music = {
     id : number;
-    createdAt : Date;
-    updatedAt : Date;
+    createdAt : string;
+    updatedAt : string;
   
     index : number;
     title : string;

@@ -3,11 +3,11 @@ import AddMusic from "../components/music/add-music.tsx";
 import UserMusicList from "../components/music/user-music-list.tsx";
 import { Button } from "../components/ui/button.tsx";
 import { ScrollArea } from "../components/ui/scroll-area.tsx";
-import useIsLoggedIn from "../hooks/useIsLoggedIn.tsx";
+
 import { useMainStore } from "../stores/main.ts";
 import { RocketIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
-import SearchYoutube from "../components/music/search/search-youtube.tsx";
+import useLoggedIn from "../hooks/useLoggedIn.tsx";
 
 export default function Home() {
   const { musics } = useMainStore((state) => state);
@@ -21,7 +21,7 @@ export default function Home() {
         <div className="relative lg:min-h-72 h-72 w-full overflow-hidden flex items-end justify-center p-6">
           <div className="flex items-center  space-x-2 h-fit w-full z-50">
           {
-            useIsLoggedIn() ? <AddMusic /> : <div className="space-x-4">
+            useLoggedIn() ? <AddMusic /> : <div className="space-x-4">
               <Button asChild><Link to={"/auth/signup"}><RocketIcon className="w-4 h-4 mr-2"/>Create an account</Link></Button>
 
               <Button variant={"outline"} className="border-primary border-dashed text-white" asChild><Link to={"/learn-more"}><StarFilledIcon className="w-4 h-4 mr-2"/>Learn more</Link></Button>

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { User, Music } from '../types/index'
-import { keep } from '../hooks/keep.tsx'
+import {useKeep } from "../hooks/useKeep.tsx";
 
 
 const defaultMusics = [
@@ -28,7 +28,7 @@ interface States {
     logout: () => void
 
     token: string | null
-    setToken: (token: string) => void
+    setToken: (token: string | null) => void
 
     musics: Music[]
     setMusics: (musics: Music[]) => void
@@ -52,16 +52,22 @@ export const useMainStore = create<States>((set) => ({
     user: null,
     setUser: (user: User) => set({ user }),
     logout: () => {
-        set({musics: defaultMusics as Music[]})
+        useKeep.remove('token')
+
+        set({ musics: defaultMusics as Music[] })
         set({ currentTrack: defaultMusics[0] as Music })
         set({ user: null })
         set({ token: null })
     },
 
-    token: keep.get('token') || null,
-    setToken: (token: string) => {
-        keep.set('token', token)
-        set({ token })
+    token: useKeep.get('token') || null,
+    setToken: (token: string | null) => {
+        if (token === null) useKeep.remove('token')
+        else {
+            useKeep.set('token', token)
+            set({ token })
+        }
+
     },
 
     musics: defaultMusics as Music[],
@@ -78,7 +84,7 @@ export const useMainStore = create<States>((set) => ({
     pause: () => set(() => ({ isPlaying: false })),
     //next: () => set((state: States) => ({ currentTrack: state.musics[state.musics.indexOf(state.currentTrack) + 1] })),
     next: () => set((state: States) => {
-         // @ts-expect-error -- TS doesn't know that the index will never be -1
+        // @ts-expect-error -- TS doesn't know that the index will never be -1
         const index = state.musics.indexOf(state.currentTrack)
         if (index === state.musics.length - 1) {
             return { currentTrack: state.musics[0] }

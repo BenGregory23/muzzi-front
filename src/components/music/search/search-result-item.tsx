@@ -1,16 +1,26 @@
-const SearchResultItem = ({ item, onClick }) => {
+const SearchResultItem = ({
+  item,
+  onClick,
+}: {
+  item: any;
+  onClick: () => any;
+}) => {
+  if (!item) return null;
+
   return (
     <div
       className="flex items-center justify-between px-4 py-2.5 bg-background/60 hover:bg-background/70 cursor-pointer text-white"
       onClick={onClick}
     >
-    
       <div className="flex items-center space-x-4">
-        <img
-          src={item.thumbnails.default.url}
-          alt={item.title}
-          className="w-24 h-30 rounded-sm object-cover"
-        />
+        {item.thumbnails === undefined ? null : (
+          <img
+            src={item.thumbnails.default.url}
+            alt={item.title}
+            className="w-30 rounded object-contain"
+          />
+        )}
+
         <div className="flex flex-col">
           <span className="text-white font-medium">{item.title}</span>
           <span className="text-muted-foreground text-xs">{item.artist}</span>
@@ -20,6 +30,5 @@ const SearchResultItem = ({ item, onClick }) => {
     </div>
   );
 };
-
 
 export default SearchResultItem;

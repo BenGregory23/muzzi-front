@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu.tsx";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { DateTime } from "luxon";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =
@@ -22,6 +23,7 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
 
   function setMusicAsCurrentTrackAndPlay() {
     setCurrentTrack(music);
+
     playReactYoutube();
   }
 
@@ -33,10 +35,10 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
   return (
     <div
       key={music.id}
-      className="flex bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary" 
+      className="grid grid-cols-4 gap-1  bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary"
     >
-      <section className="flex justify-between items-center space-x-10 space-y-2 overflow-hidden">
-        <div className="flex items-center justify-center min-w-20">
+      <section className="col-span-1  flex items-center justify-center gap-6">
+        <div className="  ">
           {currentTrack && currentTrack.id == music.id && isPlaying ? (
             <Button
               variant={"ghost"}
@@ -59,7 +61,7 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
           )}
         </div>
 
-        <div className="flex items-center  rounded-sm space-x-10">
+        <div className="flex items-center  rounded-sm space-x-10 px-1 ">
           {music.image ? (
             <img
               src={getImageURL(music.image)}
@@ -69,14 +71,25 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
           ) : (
             <img src="https://placehold.co/80x80" alt={music.title} />
           )}
-          <h1 className="text-white font-medium">{music.title}</h1>
         </div>
       </section>
 
-      <div className="px-4">
+      <h1 className="text-white font-medium">{music.title}</h1>
+      <div className="flex items-center space-x-10">
+        <h1 className=" font-light text-sm text-muted-foreground">
+          {DateTime.fromISO(music.createdAt)
+            .setLocale("fr")
+            .toFormat("dd LLL yyyy ")}
+        </h1>
+      </div>
+
+      <div className="px-4 flex-grow  flex justify-end">
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant={"ghost"} className="flex justify-center bg-background items-center border border-secondary rounded-full h-12 w-12 focus:outline-none">
+            <Button
+              variant={"ghost"}
+              className="flex justify-center bg-background items-center border border-secondary rounded-full h-12 w-12 focus:outline-none"
+            >
               <EllipsisVertical className="w-6 h-6 text-white" />
             </Button>
           </DropdownMenuTrigger>
@@ -88,8 +101,9 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
               Delete
             </DropdownMenuItem>
             <DropdownMenuItem>
-            <Pencil1Icon className="w-5 h-5 mr-2" />
-              Edit</DropdownMenuItem>
+              <Pencil1Icon className="w-5 h-5 mr-2" />
+              Edit
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

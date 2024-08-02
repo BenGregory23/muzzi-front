@@ -1,23 +1,17 @@
-import { keep } from "../hooks/keep.tsx"
+import {useKeep } from "../hooks/useKeep.tsx";
+import { fetchWrapper } from "../utils/fetchWrapper.ts"
 
 
-export default async function getUserMusics(){
-    try{
-    
-        const token = keep.get("token")
-        if(!token) throw new Error("No token found")
+export default async function getUserMusics() {
+    try {
 
-        const response = await fetch("http://localhost:3000/users/me", {
-            headers:{
-                authorization: "Bearer " + keep.get("token")
-            }
-        })
+        const token = useKeep.get("token")
+        if (!token) throw new Error("No token found")
 
-      
-        const data = await response.json()
+        const response = await fetchWrapper.get("http://localhost:3000/users/me")
 
-        return data
-    }catch(e){
+        return response
+    } catch (e) {
         console.error(e)
         return e;
     }

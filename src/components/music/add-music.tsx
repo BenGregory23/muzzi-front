@@ -23,7 +23,7 @@ import {
 } from "../ui/form.tsx";
 import { Input } from "../ui/input.tsx";
 import { useForm } from "react-hook-form";
-import { keep } from "../../hooks/keep.tsx";
+import {useKeep } from "../../hooks/useKeep.tsx";
 import _uploadFile from "../../api-requests/_uploadFile.ts";
 import { useMainStore } from "../../stores/main.ts";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -42,7 +42,7 @@ const formSchema = z.object({
 });
 
 const AddMusic = () => {
-  const { user, addMusic } = useMainStore((state) => state);
+  const { user, addMusic, updateMusic } = useMainStore((state) => state);
   const [useDefaultTitle, setUseDefaultTitle] = useState(true);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,7 +62,7 @@ const AddMusic = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + keep.get("token"),
+        Authorization: "Bearer " + useKeep.get("token"),
       },
       body: JSON.stringify({
         title: values.title,
@@ -72,11 +72,14 @@ const AddMusic = () => {
       }),
     });
 
-    _uploadFile(values.image_file[0], uuid, user?.id, "music_images");
+   
 
     const data = await response.json();
+    
     if (data) {
+      
       addMusic(data);
+      _uploadFile(values.image_file[0], uuid, user?.id, "music_images").then((res)=>updateMusic(data.id, {...data, image: res} ))
     }
     console.log(data);
   }

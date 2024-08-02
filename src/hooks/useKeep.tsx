@@ -3,7 +3,7 @@
 /**
  * util for local storage
 */
-export const keep = {
+export const useKeep = {
     set: (key: string, value: any) => {
         localStorage.setItem(key, JSON.stringify(value));
 

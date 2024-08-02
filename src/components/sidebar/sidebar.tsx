@@ -5,8 +5,7 @@ import {
   Music4Icon,
 } from "lucide-react";
 import Title from "./title.tsx";
-
-import { keep } from "../../hooks/keep.tsx";
+import {useKeep } from "../../hooks/useKeep.tsx";
 import {useMainStore} from "../../stores/main.ts";
 import { Button } from "../ui/button.tsx";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,7 +21,7 @@ const Sidebar = () => {
 
   const logOutUser = () => {
 
-    keep.remove("token");
+    useKeep.remove("token");
     logout();
   
     navigate("/");

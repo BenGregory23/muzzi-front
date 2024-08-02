@@ -5,7 +5,6 @@
 - Automatically set next music to play when current music ends
 - Display duration of music on the music card
 - Fix the display of the duration of the currend music playing
-- Fix the double click on the play button to play music
 
 
 #### Big tasks

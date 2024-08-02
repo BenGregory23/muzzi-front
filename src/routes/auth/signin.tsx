@@ -1,11 +1,12 @@
 
 import { useState } from "react"
 import { Button } from "../../components/ui/button.tsx"
-import { keep } from "../../hooks/keep.tsx"
+
 import { useMainStore } from "../../stores/main.ts"
 import { Label } from "@radix-ui/react-label"
 import { Input } from "../../components/ui/input.tsx"
 import { Link, useNavigate } from "react-router-dom"
+import { useKeep } from "../../hooks/useKeep.tsx"
 
 
 
@@ -53,7 +54,7 @@ export default function SignIn() {
         if(data.access_token){
 
           setToken(data.access_token)
-          keep.set("token",data.access_token)
+          useKeep.set("token",data.access_token)
 
           const user = await fetchUser(data.access_token)
           console.log(user)
@@ -73,7 +74,7 @@ export default function SignIn() {
   }
 
   //Redirect if user is already logged in
-  if(keep.get("token")){
+  if(useKeep.get("token")){
     // TODO: redirect to home
     navigate("/")
   }

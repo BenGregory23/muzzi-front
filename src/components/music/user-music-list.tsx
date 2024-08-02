@@ -1,5 +1,3 @@
-"use client";
-
 import { Music } from "../../types/index.ts";
 import MusicHorizontal from "./music-horizontal";
 

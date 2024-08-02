@@ -1,0 +1,3 @@
+export const MINIMUM_SEARCH_LENGTH = 3;
+export const TEMPORARY_MAXMIMUM_MUSIC_PER_USER = 100;
+
