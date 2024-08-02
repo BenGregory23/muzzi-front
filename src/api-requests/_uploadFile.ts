@@ -17,9 +17,7 @@ export default async function _uploadFile(file: File, filename:string, folder:st
                 "Authorization": "Bearer " + useKeep.get("token")
             }
         });
-        const data = await response.json();
-        return data.url;
-
+        return Promise.resolve(response);
 
     }catch(e){
         console.error(e);

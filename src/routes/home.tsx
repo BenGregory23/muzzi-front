@@ -28,9 +28,6 @@ export default function Home() {
 
               </div>
           }
-
-        
-            
           </div>
 
           <div className="z-50 space-y-2">

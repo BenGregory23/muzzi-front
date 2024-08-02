@@ -30,6 +30,8 @@ interface States {
     token: string | null
     setToken: (token: string | null) => void
 
+    purge: () => void
+
     musics: Music[]
     setMusics: (musics: Music[]) => void
     addMusic: (music: Music) => void
@@ -70,6 +72,14 @@ export const useMainStore = create<States>((set) => ({
 
     },
 
+    purge: () => {
+        useKeep.remove('token')
+        set({ musics: defaultMusics as Music[] })
+        set({ currentTrack: defaultMusics[0] as Music })
+        set({ user: null })
+        set({ token: null })
+    },
+
     musics: defaultMusics as Music[],
     setMusics: (musics: Music[]) => set({ musics }),
     addMusic: (music: Music) => set((state: States) => ({ musics: [...state.musics, music] })),
@@ -77,7 +87,7 @@ export const useMainStore = create<States>((set) => ({
     updateMusic: (id: number, music: Music) => set((state: States) => ({ musics: state.musics.map((m) => m.id === id ? music : m) })),
 
 
-    currentTrack: defaultMusics ? defaultMusics[0] as Music : null,
+    currentTrack: null,
     isPlaying: null,
     setCurrentTrack: (currentTrack: Music) => set({ currentTrack }),
     play: () => set(() => ({ isPlaying: true })),

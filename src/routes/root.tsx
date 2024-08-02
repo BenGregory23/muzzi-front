@@ -7,7 +7,7 @@ import { useMainStore } from "../stores/main.ts";
 import { useEffect } from "react";
 import {useKeep } from "../hooks/useKeep.tsx";
 import getUser from "../api-requests/getUser.ts";
-
+import { Toaster } from "@/components/ui/sonner"
 
 const Root = () => {
   // Create a client
@@ -64,6 +64,9 @@ const Root = () => {
     }
   }, [token]);
 
+
+
+
   return (
     <div className="h-screen max-h-screen flex">
      
@@ -75,6 +78,7 @@ const Root = () => {
         </div>
 
         <Player />
+        <Toaster />
       </QueryClientProvider>
     </div>
   );

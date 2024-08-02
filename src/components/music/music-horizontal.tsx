@@ -15,6 +15,7 @@ import {
 } from "../ui/dropdown-menu.tsx";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { DateTime } from "luxon";
+import { isUrl } from "../../lib/utils.ts";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =

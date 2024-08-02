@@ -2,9 +2,10 @@ import { fetchWrapper } from "../utils/fetchWrapper.ts";
 
 export  default async function _deleteMusic(id: number) {
     try{
-        const response = await fetchWrapper.delete('http://localhost:3000/musics/' + id);
-        const data = await response.json();
-        return data;
+        const {result, error} = await fetchWrapper.delete('http://localhost:3000/musics/' + id);
+        if(error) throw new Error(error.message);
+        else return result;
+        
     }catch(e){
         console.error(e);
     }

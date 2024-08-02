@@ -38,7 +38,6 @@ const Player = () => {
 
   // Function to set the volume
   const setVolume = (volume:number) => {
-    console.log(player.getCurrentTime());
 
     if (player) {
       player.setVolume(volume); // Volume can be between 0 and 100
@@ -58,7 +57,6 @@ const Player = () => {
     if (player) {
       setCurrentTime(player.getCurrentTime());
     }
-
     requestAnimationFrame(updateCurrentTime);
   };
 

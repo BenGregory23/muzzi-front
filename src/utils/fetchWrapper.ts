@@ -1,5 +1,6 @@
 // Fetch wrapper
 import { useKeep } from "../hooks/useKeep.tsx";
+import { UnauthorizedError } from "../lib/errors.ts";
 
 
 export const fetchWrapper = {
@@ -79,16 +80,18 @@ async function _delete(url:string,useToken: boolean = true) {
 // return response data if response is ok
 // else return response complete error
 
-async function handleResponse(response :Response) {
+async function handleResponse(response: Response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
-            return Promise.reject(data);
+            if (response.status === 401) {
+                return { result: null, error: new UnauthorizedError(data.message) };
+            }
+            return { result: null, error: data };
         }
-        return data;
+        return { result: data, error: null };
     });
 }
-
 
 
 
