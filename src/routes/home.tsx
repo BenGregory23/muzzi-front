@@ -8,6 +8,8 @@ import { useMainStore } from "../stores/main.ts";
 import { RocketIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import useLoggedIn from "../hooks/useLoggedIn.tsx";
+import MusicHorizontal from "../components/music/music-horizontal.tsx";
+import MusicHorizontalHeader from "../components/music/music-horizontal-header.tsx";
 
 export default function Home() {
   const { musics } = useMainStore((state) => state);
@@ -45,7 +47,7 @@ export default function Home() {
             className="absolute object-cover left-0 top-0 w-full  z-0"
           />
         </div>
-
+          <MusicHorizontalHeader />
         {musics && musics.length > 0 ? (
           <UserMusicList userMusicList={musics} />
         ) : (

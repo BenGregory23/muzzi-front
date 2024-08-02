@@ -16,6 +16,8 @@ import {
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { DateTime } from "luxon";
 import { isUrl } from "../../lib/utils.ts";
+import EditMusic from "./edit-music.tsx";
+import useLoggedIn from "../../hooks/useLoggedIn.tsx";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =
@@ -38,8 +40,8 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
       key={music.id}
       className="grid grid-cols-4 gap-1  bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary"
     >
-      <section className="col-span-1  flex items-center justify-center gap-6">
-        <div className="  ">
+      <section className="col-span-1  flex items-center justify-start w-60  gap-6">
+        <div className="mx-2 flex justify-center w-14">
           {currentTrack && currentTrack.id == music.id && isPlaying ? (
             <Button
               variant={"ghost"}
@@ -83,31 +85,23 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
             .toFormat("dd LLL yyyy ")}
         </h1>
       </div>
+      
+      {
+        useLoggedIn() && (
+          <div className={"px-4 flex-grow  flex justify-end space-x-4"}>
+        <Button
+          variant={"ghost"}
+          className="text-muted-foreground border rounded-full h-10 p-0 border-secondary w-10"
+          onClick={() => deleteMusic(music.id)}
+        >
+          <TrashIcon className="w-5 h-5 text-muted-foreground" />
+        </Button>
 
-      <div className="px-4 flex-grow  flex justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button
-              variant={"ghost"}
-              className="flex justify-center bg-background items-center border border-secondary rounded-full h-12 w-12 focus:outline-none"
-            >
-              <EllipsisVertical className="w-6 h-6 text-white" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-background border border-secondary rounded-md">
-            <DropdownMenuLabel>{music.title}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => deleteMusic(music.id)}>
-              <TrashIcon className="w-5 h-5 mr-2" />
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Pencil1Icon className="w-5 h-5 mr-2" />
-              Edit
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+        <EditMusic music={music} buttonType="icon" />
+      </div>)
+
+      }
+      
     </div>
   );
 };

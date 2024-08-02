@@ -137,7 +137,7 @@ const AddMusic = () => {
 
   return (
     <div>
-      <Sheet onOpenChange={(open) => console.log(open)}>
+      <Sheet>
         <SheetTrigger>
           <Button className="space-x-2">
             <PlusIcon /> <span>Add Music</span>{" "}
