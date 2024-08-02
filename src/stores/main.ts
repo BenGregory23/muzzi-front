@@ -84,7 +84,7 @@ export const useMainStore = create<States>((set) => ({
     setMusics: (musics: Music[]) => set({ musics }),
     addMusic: (music: Music) => set((state: States) => ({ musics: [...state.musics, music] })),
     removeMusic: (id: number) => set((state: States) => ({ musics: state.musics.filter((music) => music.id !== id) })),
-    updateMusic: (id: number, music: Music) => set((state: States) => ({ musics: state.musics.map((m) => m.id === id ? music : m) })),
+    updateMusic: (id: number, music: Music) => set((state: States) => ({ musics: state.musics.map((m) => m.id == id ? music : m) })),
 
 
     currentTrack: defaultMusics[0] as Music,

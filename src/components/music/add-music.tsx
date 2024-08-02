@@ -129,7 +129,6 @@ const AddMusic = () => {
     form.setValue("title", video.snippet.title);
 
     if (useDefaultCover) {
-      console.log("OUI")
       form.setValue("image_external_url", video.snippet.thumbnails.high.url);
     }
   };
