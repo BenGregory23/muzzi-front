@@ -13,6 +13,7 @@ import EditMusic from "./edit-music.tsx";
 import useLoggedIn from "../../hooks/useLoggedIn.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { shortenTitleToMaxLength } from "../../lib/utils.ts";
+import { motion, spring } from "framer-motion";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =
@@ -30,8 +31,13 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
     _deleteMusic(id);
   }
 
+  const item = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 0.5 } }
+  }
+
   return (
-    <div
+    <motion.div variants={item} initial="hidden" animate="show"
       key={music.id}
       className="grid grid-cols-6 gap-1  bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary"
     >
@@ -81,6 +87,8 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
         </h1>
       </div>
 
+
+
       <div className="flex items-center space-x-10">
         <h1 className=" font-light text-sm text-muted-foreground">
           {music.creator}
@@ -108,7 +116,7 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
 
       }
       
-    </div>
+    </motion.div>
   );
 };
 

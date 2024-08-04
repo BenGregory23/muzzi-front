@@ -7,7 +7,6 @@ import {
   SkipForward,
 } from "lucide-react";
 import { Button } from "../ui/button.tsx";
-import YouTube, { YouTubeProps } from "react-youtube";
 import getIDfromURL from "../../utils/getIDFromURL.ts";
 import { useMainStore } from "../../stores/main.ts";
 import usePlay from "../../hooks/usePlay.tsx";
@@ -17,6 +16,7 @@ import { Slider } from "../ui/slider.tsx";
 import { SpeakerLoudIcon } from "@radix-ui/react-icons";
 import { shortenTitleToMaxLength } from "../../lib/utils.ts";
 import YoutubeWrapper from "./YoutubeWrapper.tsx";
+import { motion } from "framer-motion";
 
 const Player = () => {
   const { currentTrack, isPlaying, next, previous } = useMainStore(
@@ -28,15 +28,6 @@ const Player = () => {
   const [duration, setDuration] = useState(0);
   const youtubePlayerRef = useRef(null);
 
-  const youtubePlayerOptions: YouTubeProps["opts"] = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 0,
-    },
-  };
-
 
 
   // Function to handle the `onReady` event
@@ -46,6 +37,7 @@ const Player = () => {
 
     // Set the player instance to state
     setPlayer(event.target);
+    event.target.playVideo();
   };
 
   // Function to set the volume
@@ -81,7 +73,8 @@ const Player = () => {
       <div className="flex space-x-3 items-center w-60">
         <div className="flex items-center justify-center w-16 h-16">
           {currentTrack != null && currentTrack.image != null ? (
-            <img
+            <motion.img
+            whileHover={{ scale: 1.2 }}
               src={getImageURL(currentTrack!.image)}
               alt={currentTrack!.title}
               className="rounded-sm w-16 max-w-16 h-16 bg-slate-700 object-cover "
@@ -115,6 +108,7 @@ const Player = () => {
             <SkipBack className="w-4 h-4" />
           </Button>
 
+         
           {isPlaying ? (
             <Button
               variant={"ghost"}
@@ -135,19 +129,13 @@ const Player = () => {
               <Play className="w-4 h-4 text-white outline-white" fill="white" />
             </Button>
           )}
+           
 
           <Button
             variant={"ghost"}
             onClick={() => {
               if (currentTrack) {
                 next();
-                console.log(youtubePlayerRef.current);
-                // youtubePlayerRef.current.updateVideo({
-                //   videoId: getIDfromURL(currentTrack.youtubeLink),
-                //   startSeconds: 0,
-                //   endSeconds: 0,
-                //   suggestedQuality: "default",
-                // });
               }
             }}
           >
@@ -195,19 +183,7 @@ const Player = () => {
       </div>
 
       {currentTrack && currentTrack.youtubeLink && (
-
-        <YoutubeWrapper videoId={getIDfromURL(currentTrack.youtubeLink)} />
-
-        // <YouTube
-        //   ref={youtubePlayerRef}
-        //   className="hidden h-0 w-0"
-        //   id={"youtube"}
-        //   videoId={getIDfromURL(currentTrack ? currentTrack.youtubeLink : "")}
-        //   opts={youtubePlayerOptions}
-        //   onReady={onPlayerReady}
-        //   onPlay={() => console.log("Playing")}
-        //   onPause={() => console.log("Paused")}
-        // />
+        <YoutubeWrapper videoId={getIDfromURL(currentTrack.youtubeLink)} onReady={onPlayerReady}  ref={youtubePlayerRef}/>
       )}
     </div>
   );

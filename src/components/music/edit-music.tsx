@@ -47,8 +47,6 @@ const EditMusic = ({
   buttonType: "button" | "icon";
 }) => {
   const { user, updateMusic } = useMainStore((state) => state);
-  const fileInputRef = useRef(null)
-  const [file, setFile] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -63,7 +61,7 @@ const EditMusic = ({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      console.log(data)
+     
       const uuid = uuidv4();
 
       const updatedMusic = {
@@ -74,10 +72,10 @@ const EditMusic = ({
 
       const response = await _editMusic(music.id, updatedMusic);
 
-      console.log(data.image_file[0])
-
+      console.log(data)
+  
       // If the user has provided an external url, we don't need to upload the file for the image cover
-      if (data.image_file === null) {
+      if (isUrl(data.image) && data.image_file.length === 0) {
         updateMusic(music.id, response);
         toast.success("Music updated successfully");
         return;
@@ -89,7 +87,7 @@ const EditMusic = ({
       const responseUpload = await _uploadFile(
         data.image_file[0],
         uuid,
-        user.id ? user.id  : null,
+        user?.id,
         "music_images"
       );
       // If the file could not be uploaded, we still add the music

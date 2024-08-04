@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,useState, forwardRef } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
-import getIDfromURL from "../../utils/getIDFromURL.ts";
 import { useMainStore } from "../../stores/main.ts";
 
-const YoutubeWrapper = ({ videoId }) => {
+
+const YoutubeWrapper = forwardRef(({ videoId, onReady }:{videoId:string, onReady: ()=>any}, ref:any) => {
     const  {isPlaying} = useMainStore((state) => state);
-    const youtubePlayerRef = useRef(null);
     const [options, setOptions] = useState<YouTubeProps["opts"]>({
         height: "0",
         width: "0",
@@ -27,25 +26,23 @@ const YoutubeWrapper = ({ videoId }) => {
         });
     }, [videoId]);
 
-    const onPlayerReady = (event: any) => {
-        event.target.playVideo();
-    };
+
     
 
   return (
     <React.Fragment>
       <YouTube
-        ref={youtubePlayerRef}
+        ref={ref}
         className="hidden h-0 w-0"
         id={"youtube"}
         videoId={videoId}
         opts={options}
-        onReady={onPlayerReady}
+        onReady={onReady}
         onPlay={() => console.log("Playing")}
         onPause={() => console.log("Paused")}
       />
     </React.Fragment>
   );
-};
+});
 
 export default YoutubeWrapper;
