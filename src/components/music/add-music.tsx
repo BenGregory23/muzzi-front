@@ -43,6 +43,8 @@ const formSchema = z.object({
   image_file: z.nullable(z.any()).optional(),
   //.instanceof(FileList).refine((file) => file?.length == 1, "File is required.")
   image_external_url: z.string().url().optional(),
+  creator: z.string().optional(),
+  isLive: z.boolean().optional(),
 });
 
 const AddMusic = () => {
@@ -61,7 +63,9 @@ const AddMusic = () => {
     if (!user) {
       throw new Error("User is null, please login");
     }
+
     console.log(values);
+   
     const uuid = uuidv4();
     const musicData = {
       title: values.title,
@@ -70,6 +74,8 @@ const AddMusic = () => {
         ? values.image_external_url
         : user?.id + "/" + uuid,
       userId: user?.id,
+      creator: values.creator,
+      isLive: values.isLive,
     };
 
     try {
@@ -81,6 +87,10 @@ const AddMusic = () => {
       if (response.error?.statusCode == 401) {
         throw new UnauthorizedError("Unauthorized, please login");
       }
+      if(response.error?.statusCode == 403){
+        throw new Error(response.error.message);
+      }
+      
 
       // If the user has provided an external url, we don't need to upload the file for the image cover
       if (values.image_external_url && response.result) {
@@ -116,6 +126,11 @@ const AddMusic = () => {
         navigate("/auth/signin");
         return;
       }
+
+      if(e instanceof Error){
+        toast.error(e.message);
+        return;
+      }
       
       console.error(e);
     }
@@ -130,7 +145,17 @@ const AddMusic = () => {
 
     if (useDefaultCover) {
       console.log("OUI")
-      form.setValue("image_external_url", video.snippet.thumbnails.high.url);
+      form.setValue("image_external_url", video.snippet.thumbnails.medium.url);
+    }
+
+    // Add the creator if it exists
+    if (video.snippet.channelTitle) {
+      form.setValue("creator", video.snippet.channelTitle);
+    }
+
+    // Add the isLive if it exists
+    if (video.snippet.liveBroadcastContent) {
+      form.setValue("isLive", video.snippet.liveBroadcastContent == "live");
     }
   };
 
@@ -199,7 +224,7 @@ const AddMusic = () => {
                         >
                           <FormLabel>Music title</FormLabel>
                           <FormControl>
-                            <Input placeholder=" My music title" {...field} />
+                            <Input maxLength={40} placeholder=" My music title" {...field} />
                           </FormControl>
                           <FormDescription>
                             This will be the name of the music.

@@ -93,14 +93,7 @@ export const useMainStore = create<States>((set) => ({
     play: () => set(() => ({ isPlaying: true })),
     pause: () => set(() => ({ isPlaying: false })),
     //next: () => set((state: States) => ({ currentTrack: state.musics[state.musics.indexOf(state.currentTrack) + 1] })),
-    next: () => set((state: States) => {
-        // @ts-expect-error -- TS doesn't know that the index will never be -1
-        const index = state.musics.indexOf(state.currentTrack)
-        if (index === state.musics.length - 1) {
-            return { currentTrack: state.musics[0] }
-        }
-        return { currentTrack: state.musics[index + 1] }
-    }),
+    next: () => set((state: States) => ({ currentTrack: state.musics[(state.musics.indexOf(state.currentTrack) + 1) % state.musics.length] })),
     previous: () => set((state: States) => {
         // @ts-expect-error -- TS doesn't know that the index will never be -1
         const index = state.musics.indexOf(state.currentTrack)

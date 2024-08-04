@@ -24,11 +24,19 @@ import {
   FormMessage,
 } from "../ui/form.tsx";
 import { Input } from "../ui/input.tsx";
+import { UnauthorizedError } from "../../lib/errors.ts";
+import _editMusic from "../../api-requests/_editMusic.ts";
+import { useMainStore } from "../../stores/main.ts";
+import _uploadFile from "../../api-requests/_uploadFile.ts";
+import { isUrl } from "../../lib/utils.ts";
+import { v4 as uuidv4 } from "uuid";
+import { useRef, useState } from "react";
 
 const FormSchema = z.object({
   title: z.string().nonempty("Title is required"),
   youtubeLink: z.string().nonempty("Youtube link is required"),
-  image: z.string().nonempty("Image is required"),
+  image: z.string().optional(),
+  image_file: z.nullable(z.any()).optional(),
 });
 
 const EditMusic = ({
@@ -38,24 +46,68 @@ const EditMusic = ({
   music: Music;
   buttonType: "button" | "icon";
 }) => {
+  const { user, updateMusic } = useMainStore((state) => state);
+  const fileInputRef = useRef(null)
+  const [file, setFile] = useState<File | null>(null);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       title: music.title,
       youtubeLink: music.youtubeLink,
-      image: music.image,
+      image: isUrl(music.image) ? music.image : "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const fileRef = form.register("image_file");
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      console.log(data)
+      const uuid = uuidv4();
+
+      const updatedMusic = {
+        ...music,
+        title: data.title,
+      };
+
+      const response = await _editMusic(music.id, updatedMusic);
+
+
+
+      // If the user has provided an external url, we don't need to upload the file for the image cover
+      if (isUrl(response.image) && response.result) {
+        updateMusic(music.id, response);
+        toast.success("Music updated successfully");
+        return;
+      }
+
+      // If the user has provided a file, we need to upload the file for the image cover
+      const responseUpload = await _uploadFile(
+        data.image_file[0],
+        uuid,
+        user.id ? user.id  : null,
+        "music_images"
+      );
+      // If the file could not be uploaded, we still add the music
+      if (!responseUpload) {
+        updateMusic(music.id, response);
+        toast.info(
+          "Music added successfully, but image could not be uploaded, please try again"
+        );
+        return;
+      }
+      // File uploaded successfully, we add the music with the image path
+      else if (responseUpload) {
+        const { path } = await responseUpload.json();
+        updateMusic(music.id, { ...response, image: path });
+        toast.success("Music added successfully");
+      }
+    } catch (e) {
+      if (e instanceof UnauthorizedError) {
+        toast("Unauthorized, please login");
+      }
+    }
   }
 
   return (
@@ -84,10 +136,7 @@ const EditMusic = ({
             </SheetDescription>
           </SheetHeader>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="w-2/3 space-y-6"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -105,39 +154,46 @@ const EditMusic = ({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="youtubeLink"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is the title of the music.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex items-center justify-center space-x-4 w-full ">
+                <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem className="flex-grow">
+                      <FormLabel>Image</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Paste the link to an image
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="youtubeLink"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is the title of the music.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <span className="text-muted-foreground text-sm">or</span>
+
+                <FormField
+                  control={form.control}
+                  name="image_file"
+                  render={() => (
+                    <FormItem className="flex-grow  ">
+                      <FormLabel>Image cover</FormLabel>
+                      <FormControl>
+                       
+                          <Input type="file" {...fileRef} className="" id="file_button"  />
+                         
+                      </FormControl>
+                      <FormDescription>
+                        Upload an image from your computer
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <Button type="submit">Save</Button>
             </form>
           </Form>

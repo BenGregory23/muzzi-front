@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-
+  
     <Sidebar />
     <Player />
     </>

@@ -7,7 +7,8 @@ import { useMainStore } from "../stores/main.ts";
 import { useEffect } from "react";
 import {useKeep } from "../hooks/useKeep.tsx";
 import getUser from "../api-requests/getUser.ts";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "../components/ui/sonner.tsx";
+
 
 const Root = () => {
   // Create a client
@@ -78,7 +79,7 @@ const Root = () => {
         </div>
 
         <Player />
-        <Toaster />
+        <Toaster position="top-left" richColors />
       </QueryClientProvider>
     </div>
   );

@@ -26,6 +26,8 @@ const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
           new URLSearchParams({ keywords: keywords })
       );
 
+      console.log(response);
+
       if (response.result.items.length > 0) setVideos(response.result.items);
       else {
         setSearchInfo("No videos found");

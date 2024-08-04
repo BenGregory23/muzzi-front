@@ -3,7 +3,7 @@ import MusicHorizontal from "./music-horizontal";
 
 const UserMusicList = ({ userMusicList }: { userMusicList: Music[] }) => {
   if (!userMusicList) {
-    return <h1>No music found</h1>;
+    return <h1 className="text-white">No music found</h1>;
   }
 
   return (
@@ -11,6 +11,8 @@ const UserMusicList = ({ userMusicList }: { userMusicList: Music[] }) => {
       {userMusicList.map((music) => (
         <MusicHorizontal key={music.id} music={music} />
       ))}
+
+    
     </div>
   );
 };
