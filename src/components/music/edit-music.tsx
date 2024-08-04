@@ -69,19 +69,22 @@ const EditMusic = ({
       const updatedMusic = {
         ...music,
         title: data.title,
+        image: data.image,
       };
 
       const response = await _editMusic(music.id, updatedMusic);
 
-
+      console.log(data.image_file[0])
 
       // If the user has provided an external url, we don't need to upload the file for the image cover
-      if (isUrl(response.image) && response.result) {
+      if (data.image_file === null) {
         updateMusic(music.id, response);
         toast.success("Music updated successfully");
         return;
       }
 
+
+      console.log("you coming here ? ")
       // If the user has provided a file, we need to upload the file for the image cover
       const responseUpload = await _uploadFile(
         data.image_file[0],
