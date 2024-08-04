@@ -66,12 +66,12 @@ export default function SignUp() {
           setToken(result.access_token);
           useKeep.set("token", result.access_token);
 
-          // const user = await getUser();
+          const user = await getUser();
        
-          // setUser(user);
+          setUser(user);
 
-          // // TODO: redirect to home
-          // navigate("/");
+          // TODO: redirect to home
+          navigate("/");
         }
       }
     } catch (e) {
