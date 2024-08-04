@@ -2,9 +2,6 @@
 
 
 #### Small tasks
-- Automatically set next music to play when current music ends
-- Display duration of music on the music card
-- Fix the display of the duration of the currend music playing
 - Maybe find a font that looks better especially for the Title of the music and App name
 
 
