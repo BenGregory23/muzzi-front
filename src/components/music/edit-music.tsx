@@ -128,7 +128,7 @@ const EditMusic = ({
           )}
         </SheetTrigger>
         {/* make the sheet larger */}
-        <SheetContent className="border-l-secondary text-white lg:max-w-3xl lg:w-50 overflow-y-auto">
+        <SheetContent className="border-l-secondary text-white lg:max-w-xl  overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Edit music</SheetTitle>
             <SheetDescription>
