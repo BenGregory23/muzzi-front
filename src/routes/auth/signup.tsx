@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "../../components/ui/form.tsx";
 import getUser from "../../api-requests/getUser.ts";
+import { API_URL } from "../../lib/constants.ts";
 
 const formSchema = z.object({
   firstname: z.string().min(2, "Firstname must be at least 2 characters"),
@@ -45,8 +46,8 @@ export default function SignUp() {
     try {
 
       console.log(values);
-      const { result, error } = await fetchWrapper.post(
-        "http://localhost:3000/auth/signup",
+      const { result, error } = await fetchWrapper.post(API_URL +
+        "/auth/signup",
         values,
         false
       );

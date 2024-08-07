@@ -1,3 +1,4 @@
+import { API_URL } from "../../lib/constants.ts";
 import { fetchWrapper } from "../../utils/fetchWrapper.ts";
 
 
@@ -6,7 +7,7 @@ import { fetchWrapper } from "../../utils/fetchWrapper.ts";
 export default async function _searchVideo(keywords: string) {
     {
         try {
-            const {result, error} = await fetchWrapper.get("http://localhost:3000/search-video?" +
+            const {result, error} = await fetchWrapper.get(API_URL+"/search-video?" +
                 new URLSearchParams({ keywords: keywords })
             );
 

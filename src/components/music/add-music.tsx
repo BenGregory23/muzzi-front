@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import { fetchWrapper } from "../../utils/fetchWrapper.ts";
 import { UnauthorizedError } from "../../lib/errors.ts";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../lib/constants.ts";
 
 const formSchema = z.object({
   title: z.string(),
@@ -79,8 +80,8 @@ const AddMusic = () => {
     };
 
     try {
-      const response = await fetchWrapper.post(
-        "http://localhost:3000/musics",
+      const response = await fetchWrapper.post(API_URL +
+        "/musics",
         musicData
       );
       console.log(response);

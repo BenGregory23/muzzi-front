@@ -7,6 +7,7 @@ import { Label } from "@radix-ui/react-label"
 import { Input } from "../../components/ui/input.tsx"
 import { Link, useNavigate } from "react-router-dom"
 import { useKeep } from "../../hooks/useKeep.tsx"
+import { API_URL } from "../../lib/constants.ts"
 
 
 
@@ -21,7 +22,7 @@ export default function SignIn() {
   
   async function fetchUser(token:string){
     try{
-      const response = await fetch("http://localhost:3000/users/me", {
+      const response = await fetch(API_URL+"/users/me", {
         headers:{
           authorization: "Bearer " + token
         }
@@ -38,7 +39,7 @@ export default function SignIn() {
   async function signin(){
     try{
 
-      const result = await fetch("http://localhost:3000/auth/signin",{
+      const result = await fetch(API_URL+"/auth/signin",{
         method:"POST",
         headers:{
           "Content-Type":"application/json"

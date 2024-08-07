@@ -3,7 +3,7 @@ import { Input } from "../../ui/input.tsx";
 import SearchResultItem from "./search-result-item.tsx";
 import { ScrollArea } from "../../ui/scroll-area.tsx";
 import { fetchWrapper } from "../../../utils/fetchWrapper.ts";
-import { MINIMUM_SEARCH_LENGTH } from "../../../lib/constants.ts";
+import { API_URL, MINIMUM_SEARCH_LENGTH } from "../../../lib/constants.ts";
 import { Label } from "../../ui/label.tsx";
 
 const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
@@ -22,7 +22,8 @@ const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
 
     try {
       const response = await fetchWrapper.get(
-        "http://localhost:3000/search-video?" +
+        API_URL +
+        "/search-video?" +
           new URLSearchParams({ keywords: keywords })
       );
 
