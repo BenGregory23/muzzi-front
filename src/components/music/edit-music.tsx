@@ -86,8 +86,8 @@ const EditMusic = ({
       // If the user has provided a file, we need to upload the file for the image cover
       const responseUpload = await _uploadFile(
         data.image_file[0],
-        uuid,
-        user?.id,
+          uuid,
+          user?.id,
         "music_images"
       );
       // If the file could not be uploaded, we still add the music
