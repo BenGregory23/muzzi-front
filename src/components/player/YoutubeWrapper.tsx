@@ -3,7 +3,7 @@ import YouTube, { YouTubeProps } from "react-youtube";
 import { useMainStore } from "../../stores/main.ts";
 
 
-const YoutubeWrapper = forwardRef(({ videoId, onReady }:{videoId:string, onReady: ()=>any}, ref:any) => {
+const YoutubeWrapper = forwardRef(({ videoId, onReady }:{videoId:string, onReady: (event:any)=>any}, ref:any) => {
     const  {isPlaying} = useMainStore((state) => state);
     const [options, setOptions] = useState<YouTubeProps["opts"]>({
         height: "0",

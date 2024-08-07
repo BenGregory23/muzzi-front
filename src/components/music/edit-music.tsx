@@ -66,7 +66,7 @@ const EditMusic = ({
       const updatedMusic = {
         ...music,
         title: data.title,
-        image: data.image,
+        image: data.image || null,
       };
 
       const response = await _editMusic(music.id, updatedMusic);

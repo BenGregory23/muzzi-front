@@ -7,7 +7,6 @@ import {
   SheetDescription,
 } from "../ui/sheet.tsx";
 import { Button } from "../ui/button.tsx";
-// @ts-expect-error - no types for uuid
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
