@@ -13,7 +13,7 @@ import EditMusic from "./edit-music.tsx";
 import useLoggedIn from "../../hooks/useLoggedIn.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { shortenTitleToMaxLength } from "../../lib/utils.ts";
-import { motion, spring } from "framer-motion";
+import { motion } from "framer-motion";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =

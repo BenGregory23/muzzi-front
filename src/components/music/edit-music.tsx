@@ -29,8 +29,7 @@ import _editMusic from "../../api-requests/_editMusic.ts";
 import { useMainStore } from "../../stores/main.ts";
 import _uploadFile from "../../api-requests/_uploadFile.ts";
 import { isUrl } from "../../lib/utils.ts";
-import { v4 as uuidv4 } from "uuid";
-import { useRef, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 const FormSchema = z.object({
   title: z.string().nonempty("Title is required"),
@@ -53,7 +52,7 @@ const EditMusic = ({
     defaultValues: {
       title: music.title,
       youtubeLink: music.youtubeLink,
-      image: isUrl(music.image) ? music.image : "",
+      image: music.image && isUrl(music.image) ? music.image : "",
     },
   });
 
@@ -87,7 +86,7 @@ const EditMusic = ({
       const responseUpload = await _uploadFile(
         data.image_file[0],
           uuid,
-          user?.id,
+          user!.id,
         "music_images"
       );
       // If the file could not be uploaded, we still add the music

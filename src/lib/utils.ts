@@ -7,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export function isUrl(input: string) {
-  if(!input) return false
+export function isUrl(input: string | null | undefined) {
+  if(!input || input == undefined) return false
   return input.startsWith("http") || input.startsWith("www")
 }
 

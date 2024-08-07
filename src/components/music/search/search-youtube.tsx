@@ -49,7 +49,7 @@ const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
       <Input
         className="text-white my-2 w-full"
         placeholder="Search for a video"
-        onKeyDown={(e) => {
+        onKeyDown={(e:any) => {
           if (e.key === "Enter") search(e.target.value);
         }}
       />
