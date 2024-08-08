@@ -11,3 +11,5 @@
 
 
 https://dribbble.com/shots/19725272-Music-Media-Player-Portal-Concept-UXUI
+
+https://www.poeticmetric.com/docs/open-source/self-hosting
