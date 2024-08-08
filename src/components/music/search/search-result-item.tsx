@@ -9,7 +9,7 @@ const SearchResultItem = ({
 
   return (
     <div
-      className="flex items-center justify-between px-4 py-2.5 bg-background/60 hover:bg-background/70 cursor-pointer text-white"
+      className="flex items-center justify-between px-4 py-2.5 bg-background/60 hover:bg-background/70 cursor-pointer text-white hover:bg-secondary"
       onClick={onClick}
     >
       <div className="flex items-center space-x-4">
@@ -23,7 +23,7 @@ const SearchResultItem = ({
 
         <div className="flex flex-col">
           <span className="text-white font-medium">{item.title}</span>
-          <span className="text-muted-foreground text-xs">{item.artist}</span>
+        
         </div>
       </div>
       <span className="text-muted-foreground text-xs">{item.duration}</span>
