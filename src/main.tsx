@@ -9,6 +9,7 @@ import UserMusics from "./routes/user-musics.tsx";
 import SignIn from "./routes/auth/signin.tsx";
 import SignUp from "./routes/auth/signup.tsx";
 import LearnMore from "./routes/learn-more.tsx";
+import './i18n';
 
 
 
