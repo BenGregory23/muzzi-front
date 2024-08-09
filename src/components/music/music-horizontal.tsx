@@ -1,5 +1,4 @@
 import { Pause, Play } from "lucide-react";
-import { Pause, Play } from "lucide-react";
 import { Music } from "../../types/music.ts";
 import { useMainStore } from "../../stores/main.ts";
 import { Button } from "../ui/button.tsx";

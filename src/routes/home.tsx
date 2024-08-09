@@ -45,7 +45,7 @@ export default function Home() {
           </div>
 
           <div className="z-50 space-y-2">
-            <h1 className="scroll-m-20 text-4xl text-white font-extrabold tracking-tight lg:text-5xl z-50">
+            <h1 className="scroll-m-20 font-migra text-4xl text-white font-extrabold tracking-tight lg:text-6xl z-50">
               {i18n.t("home.heroTitle")}
             </h1>
 
