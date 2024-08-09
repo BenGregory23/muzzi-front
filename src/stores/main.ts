@@ -19,6 +19,7 @@ const defaultMusics = [
     image:
       "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FCLeZyIID9Bo%2Fmaxresdefault.jpg&f=1&nofb=1&ipt=d43824d733e5d1aa5284984ecb3405f4d0a4a45e72ae3a0155269e4c8107f3e5&ipo=images",
     creator: "Settle",
+    isLive: false,
   },
 ];
 
@@ -99,10 +100,8 @@ export const useMainStore = create<States>((set) => ({
   next: () =>
     set((state: States) => ({
       // @ts-expect-error -- TS doesn't know that it will work
-      currentTrack:
-        state.musics[
-          (state.musics.indexOf(state.currentTrack) + 1) % state.musics.length
-        ],
+      currentTrack: state.musics[(state.musics.indexOf(state.currentTrack) + 1) % state.musics.length
+      ],
     })),
   previous: () =>
     set((state: States) => {
