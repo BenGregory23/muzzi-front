@@ -87,7 +87,7 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
         <h1 className=" font-light text-sm text-muted-foreground">
           {DateTime.fromISO(music.createdAt)
             .setLocale("fr")
-            .toFormat("dd LLL yyyy ")}
+            .toFormat("dd LLL yyyy")}
         </h1>
       </div>
 

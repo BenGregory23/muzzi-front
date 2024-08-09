@@ -29,7 +29,8 @@ import _editMusic from "../../api-requests/_editMusic.ts";
 import { useMainStore } from "../../stores/main.ts";
 import _uploadFile from "../../api-requests/_uploadFile.ts";
 import { isUrl } from "../../lib/utils.ts";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import i18next from "i18next";
 
 const FormSchema = z.object({
   title: z.string().nonempty("Title is required"),
@@ -60,7 +61,6 @@ const EditMusic = ({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-     
       const uuid = uuidv4();
 
       const updatedMusic = {
@@ -71,8 +71,8 @@ const EditMusic = ({
 
       const response = await _editMusic(music.id, updatedMusic);
 
-      console.log(data)
-  
+      console.log(data);
+
       // If the user has provided an external url, we don't need to upload the file for the image cover
       if (isUrl(data.image) && data.image_file.length === 0) {
         updateMusic(music.id, response);
@@ -80,20 +80,19 @@ const EditMusic = ({
         return;
       }
 
-
-      console.log("you coming here ? ")
+      console.log("you coming here ? ");
       // If the user has provided a file, we need to upload the file for the image cover
       const responseUpload = await _uploadFile(
         data.image_file[0],
-          uuid,
-          user!.id,
-        "music_images"
+        uuid,
+        user!.id,
+        "music_images",
       );
       // If the file could not be uploaded, we still add the music
       if (!responseUpload) {
         updateMusic(music.id, response);
         toast.info(
-          "Music added successfully, but image could not be uploaded, please try again"
+          "Music added successfully, but image could not be uploaded, please try again",
         );
         return;
       }
@@ -130,9 +129,9 @@ const EditMusic = ({
         {/* make the sheet larger */}
         <SheetContent className="border-l-secondary text-white lg:max-w-xl  overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Edit music</SheetTitle>
+            <SheetTitle>{i18next.t("editMusic.title")}</SheetTitle>
             <SheetDescription>
-              Fill out the form below to edit the music.
+              {i18next.t("editMusic.subtitle")}
             </SheetDescription>
           </SheetHeader>
           <Form {...form}>
@@ -142,7 +141,7 @@ const EditMusic = ({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>{i18next.t("music.title")}</FormLabel>
                     <FormControl>
                       <Input placeholder="shadcn" {...field} />
                     </FormControl>
@@ -160,7 +159,7 @@ const EditMusic = ({
                   name="image"
                   render={({ field }) => (
                     <FormItem className="flex-grow">
-                      <FormLabel>Image</FormLabel>
+                      <FormLabel>{i18next.t("editMusic.imageLink")}</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -179,11 +178,16 @@ const EditMusic = ({
                   name="image_file"
                   render={() => (
                     <FormItem className="flex-grow  ">
-                      <FormLabel>Image cover</FormLabel>
+                      <FormLabel>
+                        {i18next.t("editMusic.importImage")}
+                      </FormLabel>
                       <FormControl>
-                       
-                          <Input type="file" {...fileRef} className="" id="file_button"  />
-                         
+                        <Input
+                          type="file"
+                          {...fileRef}
+                          className=""
+                          id="file_button"
+                        />
                       </FormControl>
                       <FormDescription>
                         Upload an image from your computer

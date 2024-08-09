@@ -19,6 +19,7 @@ import {
 } from "../../components/ui/form.tsx";
 import getUser from "../../api-requests/getUser.ts";
 import { API_URL } from "../../lib/constants.ts";
+import i18next from "i18next";
 
 const formSchema = z.object({
   firstname: z.string().min(2, "Firstname must be at least 2 characters"),
@@ -28,7 +29,6 @@ const formSchema = z.object({
 });
 
 export default function SignUp() {
-
   const navigate = useNavigate();
   const { setToken, setUser } = useMainStore((state) => state);
 
@@ -44,29 +44,26 @@ export default function SignUp() {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-
       console.log(values);
-      const { result, error } = await fetchWrapper.post(API_URL +
-        "/auth/signup",
+      const { result, error } = await fetchWrapper.post(
+        API_URL + "/auth/signup",
         values,
-        false
+        false,
       );
       if (error) {
         toast.error(error);
       }
 
       if (result) {
-    
         console.log(result);
         // get body data
-      
 
         if (result.access_token) {
           setToken(result.access_token);
           useKeep.set("token", result.access_token);
 
           const user = await getUser();
-       
+
           setUser(user);
 
           // TODO: redirect to home
@@ -78,10 +75,6 @@ export default function SignUp() {
     }
   }
 
-
-
-
-
   return (
     <div className="flex justify-center items-center border-l border-secondary w-full bg-background h-full text-white ">
       <div className="flex items-center justify-center py-12">
@@ -91,9 +84,9 @@ export default function SignUp() {
             className="space-y-2 w-[350px]"
           >
             <div className="grid gap-2 text-center">
-              <h1 className="text-3xl font-bold">Sign up</h1>
+              <h1 className="text-3xl font-bold">{i18next.t("auth.signup")}</h1>
               <p className="text-balance text-muted-foreground">
-                Enter your email below to login to your account
+                {i18next.t("auth.signupSubtitle")}
               </p>
             </div>
             <FormField
@@ -101,7 +94,7 @@ export default function SignUp() {
               name="firstname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Firstname</FormLabel>
+                  <FormLabel>{i18next.t("auth.firstname")}</FormLabel>
                   <FormControl>
                     <Input placeholder="John" {...field} />
                   </FormControl>
@@ -118,7 +111,7 @@ export default function SignUp() {
               name="lastname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Lastname</FormLabel>
+                  <FormLabel>{i18next.t("auth.lastname")}</FormLabel>
                   <FormControl>
                     <Input placeholder="Doe" {...field} />
                   </FormControl>
@@ -135,7 +128,7 @@ export default function SignUp() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{i18next.t("auth.email")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
@@ -154,7 +147,7 @@ export default function SignUp() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{i18next.t("auth.password")}</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -164,12 +157,12 @@ export default function SignUp() {
               )}
             />
             <Button type="submit" className="w-full">
-              Sign up
+              {i18next.t("auth.signup")}
             </Button>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              {i18next.t("auth.alreadyHaveAccount")}{" "}
               <Link to="/auth/signin" className="underline">
-                Sign in
+                {i18next.t("auth.signin")}
               </Link>
             </div>
           </form>

@@ -36,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../lib/constants.ts";
 import i18next from "i18next";
 import { MusicIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
   title: z.string(),
@@ -101,14 +102,14 @@ const AddMusic = () => {
         values.image_file[0],
         uuid,
         user?.id,
-        "music_images"
+        "music_images",
       );
 
       // If the file could not be uploaded, we still add the music
       if (!responseUpload) {
         addMusic(response.result);
         toast.info(
-          "Music added successfully, but image could not be uploaded, please try again"
+          "Music added successfully, but image could not be uploaded, please try again",
         );
         return;
       }
@@ -138,7 +139,7 @@ const AddMusic = () => {
   const handleSelect = (video: any) => {
     form.setValue(
       "youtubeLink",
-      `https://www.youtube.com/watch?v=${video.id.videoId}`
+      `https://www.youtube.com/watch?v=${video.id.videoId}`,
     );
     form.setValue("title", video.snippet.title);
 
@@ -162,10 +163,18 @@ const AddMusic = () => {
     <div>
       <Sheet>
         <SheetTrigger>
-          <Button className="space-x-2">
-            <MusicIcon className="w-4 h-4" />{" "}
-            <span>{i18next.t("addMusic.addMusic")}</span>{" "}
-          </Button>
+          <motion.button
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.2 },
+            }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button className="space-x-2">
+              <MusicIcon className="w-4 h-4" />{" "}
+              <span>{i18next.t("addMusic.addMusic")}</span>{" "}
+            </Button>
+          </motion.button>
         </SheetTrigger>
         {/* make the sheet larger */}
         <SheetContent className="border-l-secondary text-white lg:max-w-3xl lg:w-50 overflow-y-auto">
@@ -263,7 +272,7 @@ const AddMusic = () => {
                       name="image_file"
                       render={() => (
                         <FormItem
-                          className={` 
+                          className={`
                         ${useDefaultCover ? "hidden" : "col-span-1"} row-start-2
                         `}
                         >
@@ -302,7 +311,9 @@ const AddMusic = () => {
                     name="youtubeLink"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{i18next.t("addMusic.youtubeLink")}</FormLabel>
+                        <FormLabel>
+                          {i18next.t("addMusic.youtubeLink")}
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://youtube.com/zeygd23jbd"
@@ -322,9 +333,14 @@ const AddMusic = () => {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{i18next.t("addMusic.musicTitle")}</FormLabel>
+                        <FormLabel>
+                          {i18next.t("addMusic.musicTitle")}
+                        </FormLabel>
                         <FormControl>
-                          <Input placeholder="Daft Punk - Around the world..." {...field} />
+                          <Input
+                            placeholder="Daft Punk - Around the world..."
+                            {...field}
+                          />
                         </FormControl>
                         <FormDescription>
                           {i18next.t("addMusic.musicTitleDescription")}
@@ -339,7 +355,9 @@ const AddMusic = () => {
                     name="image_file"
                     render={() => (
                       <FormItem className="">
-                        <FormLabel>{i18next.t("addMusic.musicCover")}</FormLabel>
+                        <FormLabel>
+                          {i18next.t("addMusic.musicCover")}
+                        </FormLabel>
                         <FormControl>
                           <Input type="file" {...fileRef} />
                         </FormControl>

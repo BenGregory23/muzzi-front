@@ -14,6 +14,7 @@ const LearnMore = () => {
     <Fragment>
       <ScrollArea className="h-full w-full bg-background border-l border-secondary p-10 flex justify-center items-center">
         <section className="flex flex-col items-start justify-center lg:max-w-prose space-y-6">
+          <h1 className="text-white text-4xl font-migra">À propos de Muzzi</h1>
           <p className="text-white leading-7 [&:not(:first-child)]:mt-6">
             Muzzi est un projet qui permet d'écouter de la musique (et même des
             live) venant de YouTube tout en travaillant ou révisant. Cette idée
@@ -22,7 +23,10 @@ const LearnMore = () => {
             capter mon attention. Mais aussi car beaucoup de contenu n'est pas
             disponible sur des plateformes d'écoutes comme Spotify, Apple Music
             ou Deezer. Donc je me suis fait le mien. C'est l'évolution d'un{" "}
-            <a href="https://music.bengregory.live" className="text-blue-500 hover:underline">
+            <a
+              href="https://music.bengregory.live"
+              className="text-blue-500 hover:underline"
+            >
               projet précédent
             </a>{" "}
             qui était un simple lecteur de musique.
@@ -32,11 +36,15 @@ const LearnMore = () => {
             <div className=" text-white text-lg font-semibold">
               Comment on fait ?
             </div>
-            Il suffit de se <Link to='/auth/signup' className="text-blue-500 hover:underline"> créer un compte </Link> et de se connecter. Ensuite vous
-            cherchez les vidéos que vous voulez écouter, vous les ajouter à
-            votre librairie et bingo ! Vous pouvez les écouter en boucle sans
-            être interrompu par des publicités ou des suggestions.
-           
+            Il suffit de se{" "}
+            <Link to="/auth/signup" className="text-blue-500 hover:underline">
+              {" "}
+              créer un compte{" "}
+            </Link>{" "}
+            et de se connecter. Ensuite vous cherchez les vidéos que vous voulez
+            écouter, vous les ajouter à votre librairie et bingo ! Vous pouvez
+            les écouter en boucle sans être interrompu par des publicités ou des
+            suggestions.
           </p>
 
           <div className="text-left flex flex-col items-start">

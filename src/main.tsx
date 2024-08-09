@@ -9,9 +9,9 @@ import UserMusics from "./routes/user-musics.tsx";
 import SignIn from "./routes/auth/signin.tsx";
 import SignUp from "./routes/auth/signup.tsx";
 import LearnMore from "./routes/learn-more.tsx";
-import './i18n';
-
-
+import "./i18n";
+import Settings from "./routes/settings.tsx";
+import NotFound from "./routes/not-found.tsx";
 
 const router = createBrowserRouter([
   {
@@ -39,13 +39,20 @@ const router = createBrowserRouter([
         path: "/learn-more",
         element: <LearnMore />,
       },
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
+      {
+        path: "/*",
+        element: <NotFound />,
+      },
     ],
-
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

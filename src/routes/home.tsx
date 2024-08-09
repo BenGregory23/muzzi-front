@@ -10,6 +10,7 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import useLoggedIn from "../hooks/useLoggedIn.tsx";
 import MusicHorizontalHeader from "../components/music/music-horizontal-header.tsx";
 import NoMusic from "../components/music/no-music.tsx";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const { musics } = useMainStore((state) => state);
@@ -23,12 +24,20 @@ export default function Home() {
               <AddMusic />
             ) : (
               <div className="space-x-4">
-                <Button asChild>
-                  <Link to={"/auth/signup"}>
-                    <RocketIcon className="w-4 h-4 mr-2" />
-                    {i18n.t("home.createAccount")}
-                  </Link>
-                </Button>
+                <motion.button
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { duration: 0.2 },
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button asChild>
+                    <Link to={"/auth/signup"}>
+                      <RocketIcon className="w-4 h-4 mr-2" />
+                      {i18n.t("home.createAccount")}
+                    </Link>
+                  </Button>
+                </motion.button>
 
                 <Button
                   variant={"outline"}
