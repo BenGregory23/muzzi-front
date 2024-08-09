@@ -7,23 +7,26 @@ import {
   SkipForward,
 } from "lucide-react";
 import { Button } from "../ui/button.tsx";
-import YouTube, { YouTubeProps } from "react-youtube";
 import getIDfromURL from "../../utils/getIDFromURL.ts";
 import { useMainStore } from "../../stores/main.ts";
 import usePlay from "../../hooks/usePlay.tsx";
 import getImageURL from "../../utils/getImageURL.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Slider } from "../ui/slider.tsx";
 import { SpeakerLoudIcon } from "@radix-ui/react-icons";
+import { shortenTitleToMaxLength } from "../../lib/utils.ts";
+import YoutubeWrapper from "./YoutubeWrapper.tsx";
+import { motion } from "framer-motion";
 
 const Player = () => {
   const { currentTrack, isPlaying, next, previous } = useMainStore(
-    (state) => state,
+    (state) => state
   );
   const [playReactYoutube, pauseReactYoutube] = usePlay();
   const [player, setPlayer] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState(0);
+  const youtubePlayerRef = useRef(null);
 
   // Function to handle the `onReady` event
   const onPlayerReady = (event: any) => {
@@ -32,6 +35,7 @@ const Player = () => {
 
     // Set the player instance to state
     setPlayer(event.target);
+    event.target.playVideo();
   };
 
   // Function to set the volume
@@ -61,22 +65,14 @@ const Player = () => {
     }
   }, [player]);
 
-  const youtubePlayerOptions: YouTubeProps["opts"] = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 0,
-    },
-  };
-
   return (
     <div className="flex p-4 text-white bg-background border-t border-secondary absolute bottom-0 w-full h-[6rem]  space-x-10">
       {/* Music Info */}
       <div className="flex space-x-3 items-center w-60">
         <div className="flex items-center justify-center w-16 h-16">
           {currentTrack != null && currentTrack.image != null ? (
-            <img
+            <motion.img
+              whileHover={{ scale: 1.2 }}
               src={getImageURL(currentTrack!.image)}
               alt={currentTrack!.title}
               className="rounded-sm w-16 max-w-16 h-16 bg-slate-700 object-cover "
@@ -90,7 +86,10 @@ const Player = () => {
 
         <span className="text-base font-medium text-clip max-w-2/3">
           {currentTrack && currentTrack?.title.length > 20 ? (
-            <span className="text-xs font-normal"> {currentTrack?.title}</span>
+            <span className=" font-normal">
+              {" "}
+              {shortenTitleToMaxLength(currentTrack?.title)}
+            </span>
           ) : (
             currentTrack?.title
           )}
@@ -131,8 +130,9 @@ const Player = () => {
           <Button
             variant={"ghost"}
             onClick={() => {
-              next();
-              playReactYoutube();
+              if (currentTrack) {
+                next();
+              }
             }}
           >
             <SkipForward className="w-4 h-4" />
@@ -144,7 +144,7 @@ const Player = () => {
         </div>
 
         <div className="flex items-center space-x-2 flex-grow">
-          {/*
+          {/* 
           {
             currentTime ? (
               <span className="text-xs">{  Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format(((currentTime/60)/60))}:{ Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format((currentTime/60) % 60) }:{ Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format((currentTime % 60))
@@ -179,12 +179,10 @@ const Player = () => {
       </div>
 
       {currentTrack && currentTrack.youtubeLink && (
-        <YouTube
-          className="hidden h-0 w-0"
-          id={"youtube"}
-          videoId={getIDfromURL(currentTrack ? currentTrack.youtubeLink : "")}
-          opts={youtubePlayerOptions}
+        <YoutubeWrapper
+          videoId={getIDfromURL(currentTrack.youtubeLink)}
           onReady={onPlayerReady}
+          ref={youtubePlayerRef}
         />
       )}
     </div>

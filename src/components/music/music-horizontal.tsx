@@ -1,4 +1,5 @@
 import { Pause, Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { Music } from "../../types/music.ts";
 import { useMainStore } from "../../stores/main.ts";
 import { Button } from "../ui/button.tsx";
@@ -11,6 +12,9 @@ import { DateTime } from "luxon";
 
 import EditMusic from "./edit-music.tsx";
 import useLoggedIn from "../../hooks/useLoggedIn.tsx";
+import { Badge } from "../ui/badge.tsx";
+import { shortenTitleToMaxLength } from "../../lib/utils.ts";
+import { motion } from "framer-motion";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =
@@ -27,10 +31,18 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
     _deleteMusic(id);
   }
 
+  const item = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div
+    <motion.div
+      variants={item}
+      initial="hidden"
+      animate="show"
       key={music.id}
-      className="grid grid-cols-4 gap-1  bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary"
+      className="grid grid-cols-6 gap-1  bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary"
     >
       <section className="col-span-1  flex items-center justify-start w-60  gap-6">
         <div className="mx-2 flex justify-center w-14">
@@ -56,12 +68,12 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
           )}
         </div>
 
-        <div className="flex items-center  rounded-sm space-x-10 px-1 ">
+        <div className="flex items-center w-24 h-24 overflow-hidden  rounded-sm space-x-10  ">
           {music.image ? (
             <img
               src={getImageURL(music.image)}
               alt={music.title}
-              className="w-20 h-20 rounded-sm object-cover"
+              className="w-full h-full rounded-sm object-cover "
             />
           ) : (
             <img src="https://placehold.co/80x80" alt={music.title} />
@@ -69,13 +81,25 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
         </div>
       </section>
 
-      <h1 className="text-white font-medium">{music.title}</h1>
+      <h1 className="text-white font-medium">
+        {shortenTitleToMaxLength(music.title)}
+      </h1>
       <div className="flex items-center space-x-10">
         <h1 className=" font-light text-sm text-muted-foreground">
           {DateTime.fromISO(music.createdAt)
             .setLocale("fr")
             .toFormat("dd LLL yyyy ")}
         </h1>
+      </div>
+
+      <div className="flex items-center space-x-10">
+        <h1 className=" font-light text-sm text-muted-foreground">
+          {music.creator}
+        </h1>
+      </div>
+
+      <div className="flex items-center space-x-10">
+        {music.isLive ? <Badge>Live</Badge> : null}
       </div>
 
       {useLoggedIn() && (
@@ -91,7 +115,7 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
           <EditMusic music={music} buttonType="icon" />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

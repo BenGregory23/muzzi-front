@@ -1,4 +1,5 @@
 import {useKeep } from "../hooks/useKeep.tsx";
+import { API_URL } from "../lib/constants.ts";
 
 export default async function _uploadFile(file: File, filename:string, folder:string | number, bucket:string) {
     try{
@@ -10,7 +11,7 @@ export default async function _uploadFile(file: File, filename:string, folder:st
 
 
         // Not using the Fetch Wrapper because of the formData
-        const response = await fetch('http://localhost:3000/buckets/' + bucket, {
+        const response = await fetch(API_URL+'/buckets/' + bucket, {
             method: 'POST',
             body: formData,
             headers:{

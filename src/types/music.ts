@@ -12,4 +12,6 @@ export type Music = {
     userId : number;
     user : User | null;
     image : string | null;
+    creator: string,
+    isLive: boolean,
 }

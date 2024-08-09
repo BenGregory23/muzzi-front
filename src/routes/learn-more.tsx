@@ -1,36 +1,75 @@
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
+import { Fragment } from "react/jsx-runtime";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../components/ui/alert.tsx";
+import { Github } from "lucide-react";
+import { Link } from "react-router-dom";
+
 const LearnMore = () => {
   return (
-    <ScrollArea className="w-full h-[calc(100vh-5rem)] bg-background border-l border-secondary  flex flex-col justify-center items-center p-10  text-muted-foreground">
-      <section className="flex justify-start flex-col items-start space-y-5">
-        <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-white">
-          What is Muzzi ?
-        </h2>
+    <Fragment>
+      <ScrollArea className="h-full w-full bg-background border-l border-secondary p-10 flex justify-center items-center">
+        <section className="flex flex-col items-start justify-center lg:max-w-prose space-y-6">
+          <p className="text-white leading-7 [&:not(:first-child)]:mt-6">
+            Muzzi est un projet qui permet d'écouter de la musique (et même des
+            live) venant de YouTube tout en travaillant ou révisant. Cette idée
+            est née d'un besoin personnel de pouvoir écouter de la musique sans
+            être interrompu par des publicités ou par une interface qui veut
+            capter mon attention. Mais aussi car beaucoup de contenu n'est pas
+            disponible sur des plateformes d'écoutes comme Spotify, Apple Music
+            ou Deezer. Donc je me suis fait le mien. C'est l'évolution d'un{" "}
+            <a href="https://music.bengregory.live" className="text-blue-500 hover:underline">
+              projet précédent
+            </a>{" "}
+            qui était un simple lecteur de musique.
+          </p>
 
-        <p className="leading-7 [&:not(:first-child)]:mt-6 max-w-prose text-justify ">
-          Muzzi is a music player that allows you to listen to your favorite
-          youtube videos as music. You can create playlists, add songs to them,
-          and listen to them whenever you want. The idea is to provide a simple
-          and easy-to-use music player that allows you to listen to music from
-          youtube without any distractions.
-        </p>
+          <p className=" text-white leading-7 [&:not(:first-child)]:mt-6">
+            <div className=" text-white text-lg font-semibold">
+              Comment on fait ?
+            </div>
+            Il suffit de se <Link to='/auth/signup' className="text-blue-500 hover:underline"> créer un compte </Link> et de se connecter. Ensuite vous
+            cherchez les vidéos que vous voulez écouter, vous les ajouter à
+            votre librairie et bingo ! Vous pouvez les écouter en boucle sans
+            être interrompu par des publicités ou des suggestions.
+           
+          </p>
 
-        <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-white">
-          Why use Muzzi ?
-        </h2>
+          <div className="text-left flex flex-col items-start">
+            <div className=" text-white text-lg font-semibold">
+              Technologies utilisées
+            </div>
+            <ul className=" ml-6 list-disc [&>li]:mt-2 text-white">
+              <li>Frontend : React, TailwindCSS, Shadcn</li>
+              <li>Backend : NestJs (NodeJS), Prisma</li>
+              <li>Base de données : SQL (Supabase)</li>
+            </ul>
+          </div>
 
-        <p className="leading-7 [&:not(:first-child)]:mt-6 max-w-prose text-justify">
-          Using Muzzi can prevent you from getting distracted by the video
-          content on youtube and help you focus on the music you are listening
-          to.
-        </p>
+          <Alert className="border-secondary">
+            <Github className="h-4 w-4" />
 
-        <p className="leading-7 [&:not(:first-child)]:mt-6 max-w-prose text-justify">
-         One of the reason why I go on youtube instead of Spotify or Apple Music is because I can find a lot of remixes, covers, and live performances that are not available on other platforms. Muzzi allows you to listen to those videos as music without any distractions.
-        </p>
-      </section>
-    </ScrollArea>
+            <AlertTitle>N'hésitez pas à aller voir mon github</AlertTitle>
+            <AlertDescription>
+              <p>
+                Vous pouvez voir le code source de ce projet sur mon github ou
+                mes autres projets.
+              </p>
+              <a
+                href="https://github.com/BenGregory23"
+                className="text-blue-500"
+              >
+                BenGregory23
+              </a>
+            </AlertDescription>
+          </Alert>
+        </section>
+      </ScrollArea>
+    </Fragment>
   );
 };
 
