@@ -1,21 +1,14 @@
-import { EllipsisVertical, Pause, Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { Music } from "../../types/music.ts";
 import { useMainStore } from "../../stores/main.ts";
 import { Button } from "../ui/button.tsx";
 import usePlay from "../../hooks/usePlay.tsx";
 import getImageURL from "../../utils/getImageURL.ts";
 import _deleteMusic from "../../api-requests/_deleteMusic.ts";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu.tsx";
-import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+
+import { TrashIcon } from "@radix-ui/react-icons";
 import { DateTime } from "luxon";
-import { isUrl } from "../../lib/utils.ts";
+
 import EditMusic from "./edit-music.tsx";
 import useLoggedIn from "../../hooks/useLoggedIn.tsx";
 
@@ -26,7 +19,6 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
 
   function setMusicAsCurrentTrackAndPlay() {
     setCurrentTrack(music);
-
     playReactYoutube();
   }
 
@@ -85,23 +77,20 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
             .toFormat("dd LLL yyyy ")}
         </h1>
       </div>
-      
-      {
-        useLoggedIn() && (
-          <div className={"px-4 flex-grow  flex justify-end space-x-4"}>
-        <Button
-          variant={"ghost"}
-          className="text-muted-foreground border rounded-full h-10 p-0 border-secondary w-10"
-          onClick={() => deleteMusic(music.id)}
-        >
-          <TrashIcon className="w-5 h-5 text-muted-foreground" />
-        </Button>
 
-        <EditMusic music={music} buttonType="icon" />
-      </div>)
+      {useLoggedIn() && (
+        <div className={"px-4 flex-grow  flex justify-end space-x-4"}>
+          <Button
+            variant={"ghost"}
+            className="text-muted-foreground border rounded-full h-10 p-0 border-secondary w-10"
+            onClick={() => deleteMusic(music.id)}
+          >
+            <TrashIcon className="w-5 h-5 text-muted-foreground" />
+          </Button>
 
-      }
-      
+          <EditMusic music={music} buttonType="icon" />
+        </div>
+      )}
     </div>
   );
 };

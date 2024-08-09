@@ -2,16 +2,13 @@ import { useMainStore } from "../stores/main.ts";
 
 const playReactYoutube = () => {
   const { play, currentTrack } = useMainStore.getState();
-  console.log(currentTrack)
-
+  console.log(currentTrack);
+  play();
   const player = document.getElementById("youtube") as HTMLIFrameElement;
   player.contentWindow?.postMessage(
     '{"event":"command","func":"playVideo","args":""}',
-    "*"
+    "*",
   );
-
-
-  play();
 };
 
 const pauseReactYoutube = () => {
@@ -20,7 +17,7 @@ const pauseReactYoutube = () => {
   const player = document.getElementById("youtube") as HTMLIFrameElement;
   player.contentWindow?.postMessage(
     '{"event":"command","func":"pauseVideo","args":""}',
-    "*"
+    "*",
   );
 };
 

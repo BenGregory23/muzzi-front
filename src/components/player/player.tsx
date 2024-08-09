@@ -18,39 +18,34 @@ import { SpeakerLoudIcon } from "@radix-ui/react-icons";
 
 const Player = () => {
   const { currentTrack, isPlaying, next, previous } = useMainStore(
-    (state) => state
+    (state) => state,
   );
   const [playReactYoutube, pauseReactYoutube] = usePlay();
   const [player, setPlayer] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration , setDuration] = useState(0);
+  const [duration, setDuration] = useState(0);
 
-  
-
-   // Function to handle the `onReady` event
-   const onPlayerReady = (event:any) => {
+  // Function to handle the `onReady` event
+  const onPlayerReady = (event: any) => {
     setDuration(event.target.getDuration());
     setCurrentTime(event.target.getCurrentTime());
-   
+
     // Set the player instance to state
     setPlayer(event.target);
   };
 
   // Function to set the volume
-  const setVolume = (volume:number) => {
-
+  const setVolume = (volume: number) => {
     if (player) {
       player.setVolume(volume); // Volume can be between 0 and 100
     }
   };
-
 
   const setCurrentTimeOnPlayer = (time: number) => {
     if (player) {
       player.seekTo(time, true);
     }
   };
-
 
   // update the current time using requestAnimationFrame to avoid performance issues
   const updateCurrentTime = () => {
@@ -62,14 +57,9 @@ const Player = () => {
 
   useEffect(() => {
     if (player) {
-    
       updateCurrentTime();
     }
   }, [player]);
-
-
-
-
 
   const youtubePlayerOptions: YouTubeProps["opts"] = {
     height: "0",
@@ -85,27 +75,25 @@ const Player = () => {
       {/* Music Info */}
       <div className="flex space-x-3 items-center w-60">
         <div className="flex items-center justify-center w-16 h-16">
-        {currentTrack != null && currentTrack.image != null ? (
-          <img
-            src={getImageURL(currentTrack!.image)}
-            alt={currentTrack!.title}
-            className="rounded-sm w-16 max-w-16 h-16 bg-slate-700 object-cover "
-          />
-        ) : (
-          <div className="rounded-sm w-16 max-w-16 h-16 bg-slate-700 ">
-            <span>{currentTrack?.title[0]}</span>
-          </div>
-        )}
+          {currentTrack != null && currentTrack.image != null ? (
+            <img
+              src={getImageURL(currentTrack!.image)}
+              alt={currentTrack!.title}
+              className="rounded-sm w-16 max-w-16 h-16 bg-slate-700 object-cover "
+            />
+          ) : (
+            <div className="rounded-sm w-16 max-w-16 h-16 bg-slate-700 ">
+              <span>{currentTrack?.title[0]}</span>
+            </div>
+          )}
         </div>
 
         <span className="text-base font-medium text-clip max-w-2/3">
-          
-
-          {
-           currentTrack && currentTrack?.title.length > 20 ? (
-              <span className="text-xs font-normal"> {currentTrack?.title}</span>
-            ) : currentTrack?.title
-          }
+          {currentTrack && currentTrack?.title.length > 20 ? (
+            <span className="text-xs font-normal"> {currentTrack?.title}</span>
+          ) : (
+            currentTrack?.title
+          )}
         </span>
       </div>
       {/* Controls and Timeline */}
@@ -140,7 +128,13 @@ const Player = () => {
             </Button>
           )}
 
-          <Button variant={"ghost"} onClick={() => next()}>
+          <Button
+            variant={"ghost"}
+            onClick={() => {
+              next();
+              playReactYoutube();
+            }}
+          >
             <SkipForward className="w-4 h-4" />
           </Button>
 
@@ -150,7 +144,7 @@ const Player = () => {
         </div>
 
         <div className="flex items-center space-x-2 flex-grow">
-{/* 
+          {/*
           {
             currentTime ? (
               <span className="text-xs">{  Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format(((currentTime/60)/60))}:{ Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format((currentTime/60) % 60) }:{ Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format((currentTime % 60))
@@ -159,15 +153,28 @@ const Player = () => {
               <span className="text-xs">0:0:0</span>
             )
           } */}
-         
-          <Slider className="w-full" step={1} defaultValue={[0]} min={0} max={duration} value={[currentTime]} onValueChange={(e) => setCurrentTimeOnPlayer(e.at(0) as number)} />
+
+          <Slider
+            className="w-full"
+            step={1}
+            defaultValue={[0]}
+            min={0}
+            max={duration}
+            value={[currentTime]}
+            onValueChange={(e) => setCurrentTimeOnPlayer(e.at(0) as number)}
+          />
           {/* <span className="text-xs">{((duration/1000)/60).toFixed(4)}</span> */}
         </div>
 
         <div className="flex items-center space-x-4">
-
           <SpeakerLoudIcon className="w-4 h-4" />
-          <Slider min={0} max={100} defaultValue={[100]}  className="w-20"  onValueChange={(e) => setVolume(e.at(0) as number)} />
+          <Slider
+            min={0}
+            max={100}
+            defaultValue={[100]}
+            className="w-20"
+            onValueChange={(e) => setVolume(e.at(0) as number)}
+          />
         </div>
       </div>
 
