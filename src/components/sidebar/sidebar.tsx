@@ -10,6 +10,7 @@ import {useMainStore} from "../../stores/main.ts";
 import { Button } from "../ui/button.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import { GearIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import i18next from "i18next";
 
 
 const Sidebar = () => {
@@ -42,7 +43,7 @@ const Sidebar = () => {
             className="flex items-center justify-start px-4  w-60  py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 "
           >
             <House className="w-5 h-5" />
-            <span className="font-normal">Home</span>
+            <span className="font-normal">{i18next.t('sidebar.home')}</span>
           </Link>
 
           <Link
@@ -50,7 +51,7 @@ const Sidebar = () => {
             className="flex items-center justify-start px-4   w-60  py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 "
           >
             <Music4Icon className="w-5 h-5" />
-            <span className="font-normal">Musics</span>
+            <span className="font-normal">{i18next.t('sidebar.musics')}</span>
           </Link>
 
           <Link
@@ -58,7 +59,7 @@ const Sidebar = () => {
             className="flex items-center justify-start px-4   w-60  py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 "
           >
             <ListMusic className="w-5 h-5" />
-            <span className="font-normal">Playlists  <span className="text-xs">(Coming soon)</span> </span>
+            <span className="font-normal">{i18next.t('sidebar.playlists')}  <span className="text-xs">({i18next.t('sidebar.comingSoon')})</span> </span>
           </Link>
         </div>
 
@@ -69,16 +70,16 @@ const Sidebar = () => {
             className="flex items-center justify-start px-4  w-60  py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 "
           >
             <StarFilledIcon className="w-5 h-5" />
-            <span className="font-normal">Learn more</span>
+            <span className="font-normal">{i18next.t('sidebar.learnMore')}</span>
           </Link>
 
 
           <Link
             to={"/settings"}
-            className="flex items-center justify-start px-4  w-60 py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 "
-          >
+            
+            className={"flex items-center justify-start px-4  w-60 py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 " + (token === null ? "hidden" : "")}>
             <GearIcon className="w-5 h-5" />
-            <span className="font-normal">Settings</span>
+            <span className="font-normal">{i18next.t('sidebar.settings')}</span>
           </Link>
 
           {token === null ? (
@@ -87,9 +88,9 @@ const Sidebar = () => {
               className="flex items-center justify-start px-4 w-60  py-1.5 rounded-md text-muted-foreground space-x-4 hover:bg-secondary/90 "
             >
               <LogIn className="w-5 h-5" />
-              <span className="font-normal">Sign in</span>
+              <span className="font-normal">{i18next.t('sidebar.signin')}</span>
             </Link> ) : (
-              <Button className="w-full" onClick={()=>logOutUser()}>Log out</Button>
+              <Button className="w-full" onClick={()=>logOutUser()}>{i18next.t('sidebar.logout')}</Button>
             
           )}
         </div>

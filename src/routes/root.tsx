@@ -9,8 +9,8 @@ import {useKeep } from "../hooks/useKeep.tsx";
 import getUser from "../api-requests/getUser.ts";
 import { Toaster } from "../components/ui/sonner.tsx";
 
-
 const Root = () => {
+
   // Create a client
   const queryClient = new QueryClient();
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const Root = () => {
   }, [token]);
 
 
-
+  
 
   return (
     <div className="h-screen max-h-screen flex">
@@ -81,6 +81,7 @@ const Root = () => {
         <Player />
         <Toaster position="top-left" richColors />
       </QueryClientProvider>
+   
     </div>
   );
 };

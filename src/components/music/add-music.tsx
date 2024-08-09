@@ -24,7 +24,6 @@ import { Input } from "../ui/input.tsx";
 import { useForm } from "react-hook-form";
 import _uploadFile from "../../api-requests/_uploadFile.ts";
 import { useMainStore } from "../../stores/main.ts";
-import { PlusIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs.tsx";
 import SearchYoutube from "./search/search-youtube.tsx";
 import { useState } from "react";
@@ -35,6 +34,8 @@ import { fetchWrapper } from "../../utils/fetchWrapper.ts";
 import { UnauthorizedError } from "../../lib/errors.ts";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../lib/constants.ts";
+import i18next from "i18next";
+import { MusicIcon } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string(),
@@ -65,7 +66,7 @@ const AddMusic = () => {
     }
 
     console.log(values);
-   
+
     const uuid = uuidv4();
     const musicData = {
       title: values.title,
@@ -79,18 +80,14 @@ const AddMusic = () => {
     };
 
     try {
-      const response = await fetchWrapper.post(API_URL +
-        "/musics",
-        musicData
-      );
+      const response = await fetchWrapper.post(API_URL + "/musics", musicData);
       console.log(response);
       if (response.error?.statusCode == 401) {
         throw new UnauthorizedError("Unauthorized, please login");
       }
-      if(response.error?.statusCode == 403){
+      if (response.error?.statusCode == 403) {
         throw new Error(response.error.message);
       }
-      
 
       // If the user has provided an external url, we don't need to upload the file for the image cover
       if (values.image_external_url && response.result) {
@@ -110,7 +107,9 @@ const AddMusic = () => {
       // If the file could not be uploaded, we still add the music
       if (!responseUpload) {
         addMusic(response.result);
-        toast.info("Music added successfully, but image could not be uploaded, please try again");
+        toast.info(
+          "Music added successfully, but image could not be uploaded, please try again"
+        );
         return;
       }
       // File uploaded successfully, we add the music with the image path
@@ -120,18 +119,18 @@ const AddMusic = () => {
         toast.success("Music added successfully");
       }
     } catch (e) {
-      if(e instanceof UnauthorizedError){
+      if (e instanceof UnauthorizedError) {
         toast.error(e.message);
         purge();
         navigate("/auth/signin");
         return;
       }
 
-      if(e instanceof Error){
+      if (e instanceof Error) {
         toast.error(e.message);
         return;
       }
-      
+
       console.error(e);
     }
   }
@@ -144,7 +143,7 @@ const AddMusic = () => {
     form.setValue("title", video.snippet.title);
 
     if (useDefaultCover) {
-      console.log("OUI")
+      console.log("OUI");
       form.setValue("image_external_url", video.snippet.thumbnails.medium.url);
     }
 
@@ -164,26 +163,26 @@ const AddMusic = () => {
       <Sheet>
         <SheetTrigger>
           <Button className="space-x-2">
-            <PlusIcon /> <span>Add Music</span>{" "}
+            <MusicIcon className="w-4 h-4" />{" "}
+            <span>{i18next.t("addMusic.addMusic")}</span>{" "}
           </Button>
         </SheetTrigger>
         {/* make the sheet larger */}
         <SheetContent className="border-l-secondary text-white lg:max-w-3xl lg:w-50 overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Add a new music</SheetTitle>
+            <SheetTitle>{i18next.t("addMusic.title")}</SheetTitle>
             <SheetDescription>
-              Fill out the form below to add a youtube video that you want to
-              listen to.
+              {i18next.t("addMusic.subtitle")}
             </SheetDescription>
           </SheetHeader>
 
           <Tabs defaultValue="search" className="w-full my-2 ">
             <TabsList className="w-full">
               <TabsTrigger value="search" className="flex-grow">
-                Search{" "}
+                {i18next.t("addMusic.search")}{" "}
               </TabsTrigger>
               <TabsTrigger value="manual" className="flex-grow">
-                Manual
+                {i18next.t("addMusic.manual")}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="search">
@@ -191,7 +190,7 @@ const AddMusic = () => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 text-white mt-4"
+                  className="space-y-10 text-white mt-4 flex flex-col justify-center"
                 >
                   <div className="grid grid-cols-2 gap-6">
                     <div className=" px-4 py-1 rounded-md space-x-4 flex   items-center">
@@ -206,11 +205,10 @@ const AddMusic = () => {
                       </FormControl>
                       <div className="flex flex-col space-y-1">
                         <Label htmlFor="useDefaultTitle">
-                          Use default title
+                          {i18next.t("addMusic.useDefaultTitle")}
                         </Label>
                         <p className="text-muted-foreground text-xs">
-                          This will use the title of the youtube video as the
-                          music title.
+                          {i18next.t("addMusic.useDefaultTitleDescription")}
                         </p>
                       </div>
                     </div>
@@ -222,12 +220,18 @@ const AddMusic = () => {
                         <FormItem
                           className={`${useDefaultTitle ? "hidden" : ""}`}
                         >
-                          <FormLabel>Music title</FormLabel>
+                          <FormLabel>
+                            {i18next.t("addMusic.musicTitle")}
+                          </FormLabel>
                           <FormControl>
-                            <Input maxLength={40} placeholder=" My music title" {...field} />
+                            <Input
+                              maxLength={40}
+                              placeholder="Daft Punk -  Around the world..."
+                              {...field}
+                            />
                           </FormControl>
                           <FormDescription>
-                            This will be the name of the music.
+                            {i18next.t("addMusic.musicTitleDescription")}
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -246,10 +250,10 @@ const AddMusic = () => {
                       </FormControl>
                       <div className="flex flex-col space-y-1">
                         <Label htmlFor="useDefaultCover">
-                          Use default cover
+                          {i18next.t("addMusic.useDefaultCover")}
                         </Label>
                         <p className="text-muted-foreground text-xs">
-                          This will use the default cover as the music cover.
+                          {i18next.t("addMusic.useDefaultCoverDescription")}
                         </p>
                       </div>
                     </div>
@@ -263,12 +267,14 @@ const AddMusic = () => {
                         ${useDefaultCover ? "hidden" : "col-span-1"} row-start-2
                         `}
                         >
-                          <FormLabel>Image cover</FormLabel>
+                          <FormLabel>
+                            {i18next.t("addMusic.musicCover")}
+                          </FormLabel>
                           <FormControl>
                             <Input type="file" {...fileRef} />
                           </FormControl>
                           <FormDescription>
-                            Paste the youtube link here.
+                            {i18next.t("addMusic.musicCoverDescription")}
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -276,7 +282,12 @@ const AddMusic = () => {
                     />
                   </div>
 
-                  <Button type="submit">Submit</Button>
+                  <Button
+                    className="w-full max-w-prose self-center"
+                    type="submit"
+                  >
+                    {i18next.t("addMusic.submit")}
+                  </Button>
                 </form>
               </Form>
             </TabsContent>
@@ -284,14 +295,14 @@ const AddMusic = () => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 text-white mt-4"
+                  className="space-y-10 text-white mt-4 flex flex-col justify-center"
                 >
                   <FormField
                     control={form.control}
                     name="youtubeLink"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Youtube link</FormLabel>
+                        <FormLabel>{i18next.t("addMusic.youtubeLink")}</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://youtube.com/zeygd23jbd"
@@ -299,7 +310,7 @@ const AddMusic = () => {
                           />
                         </FormControl>
                         <FormDescription>
-                          Paste the youtube link here.
+                          {i18next.t("addMusic.youtubeLinkDescription")}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -311,12 +322,12 @@ const AddMusic = () => {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Music title</FormLabel>
+                        <FormLabel>{i18next.t("addMusic.musicTitle")}</FormLabel>
                         <FormControl>
-                          <Input placeholder=" My music title" {...field} />
+                          <Input placeholder="Daft Punk - Around the world..." {...field} />
                         </FormControl>
                         <FormDescription>
-                          This will be the name of the music.
+                          {i18next.t("addMusic.musicTitleDescription")}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -328,19 +339,24 @@ const AddMusic = () => {
                     name="image_file"
                     render={() => (
                       <FormItem className="">
-                        <FormLabel>Image cover</FormLabel>
+                        <FormLabel>{i18next.t("addMusic.musicCover")}</FormLabel>
                         <FormControl>
                           <Input type="file" {...fileRef} />
                         </FormControl>
                         <FormDescription>
-                          Paste the youtube link here.
+                          {i18next.t("addMusic.musicCoverDescription")}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <Button type="submit">Submit</Button>
+                  <Button
+                    className="w-full max-w-prose self-center"
+                    type="submit"
+                  >
+                    {i18next.t("addMusic.submit")}
+                  </Button>
                 </form>
               </Form>
             </TabsContent>

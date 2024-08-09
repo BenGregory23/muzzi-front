@@ -5,11 +5,12 @@ import { ScrollArea } from "../../ui/scroll-area.tsx";
 import { fetchWrapper } from "../../../utils/fetchWrapper.ts";
 import { API_URL, MINIMUM_SEARCH_LENGTH } from "../../../lib/constants.ts";
 import { Label } from "../../ui/label.tsx";
+import i18next from "i18next";
 
 const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
   const [videos, setVideos] = useState<[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
-  const [searchInfo, setSearchInfo] = useState("Videos will appear here");
+  const [searchInfo, setSearchInfo] = useState(i18next.t("addMusic.videosWillAppearHere"));
 
   async function search(keywords: string) {
     if (keywords.length < MINIMUM_SEARCH_LENGTH) {
@@ -27,7 +28,7 @@ const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
           new URLSearchParams({ keywords: keywords })
       );
 
-      console.log(response);
+
 
       if (response.result.items.length > 0) setVideos(response.result.items);
       else {
@@ -44,11 +45,11 @@ const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
   return (
     <div>
       
-      <Label className="mb-2">Youtube video</Label>
+      <Label className="mb-2">{i18next.t("addMusic.youtubeVideo")}</Label>
 
       <Input
         className="text-white my-2 w-full"
-        placeholder="Search for a video"
+        placeholder={i18next.t("addMusic.searchVideo")}
         onKeyDown={(e:any) => {
           if (e.key === "Enter") search(e.target.value);
         }}
@@ -75,7 +76,7 @@ const SearchYoutube = ({handleSelect}:{handleSelect:(video:any)=>any}) => {
         
       </div>
       <p className="text-[0.8rem] text-muted-foreground">
-        Search for a video to add to your library.
+        {i18next.t("addMusic.searchDescription")}
       </p>
 
 
