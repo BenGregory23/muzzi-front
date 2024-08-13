@@ -8,10 +8,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useKeep } from "../../hooks/useKeep.tsx";
 import { API_URL } from "../../lib/constants.ts";
 import i18next from "i18next";
+import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
+import { fetchWrapper } from "../../utils/fetchWrapper.ts";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setToken, setUser } = useMainStore((state) => state);
 
@@ -32,33 +36,38 @@ export default function SignIn() {
 
   async function signin() {
     try {
-      const result = await fetch(API_URL + "/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      setLoading(true);
+      const { result, error } = await fetchWrapper.post(
+        API_URL + "/auth/signin",
+        {
+          email,
+          password,
+        }
+      );
+
+      if (error) {
+        console.log(error);
+        toast.error("Erreur: veuillez vérifier vos informations");
+
+        setLoading(false);
+      }
 
       if (result) {
-        console.log("Signin success");
-        // get body data
-        const data = await result.json();
+        if (result.access_token) {
+          setToken(result.access_token);
+          useKeep.set("token", result.access_token);
 
-        if (data.access_token) {
-          setToken(data.access_token);
-          useKeep.set("token", data.access_token);
+          const user = await fetchUser(result.access_token);
 
-          const user = await fetchUser(data.access_token);
-          console.log(user);
           setUser(user);
 
           // TODO: redirect to home
           navigate("/");
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setLoading(false);
     }
   }
 
@@ -107,7 +116,11 @@ export default function SignIn() {
               />
             </div>
             <Button onClick={() => signin()} className="w-full">
-              {i18next.t("auth.signin")}
+              {loading ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                i18next.t("auth.signin")
+              )}
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">

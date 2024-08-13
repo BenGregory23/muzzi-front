@@ -5,19 +5,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import getUserMusics from "../api-requests/getUserMusics.ts";
 import { useMainStore } from "../stores/main.ts";
 import { useEffect } from "react";
-import {useKeep } from "../hooks/useKeep.tsx";
+import { useKeep } from "../hooks/useKeep.tsx";
 import getUser from "../api-requests/getUser.ts";
 import { Toaster } from "../components/ui/sonner.tsx";
 
 const Root = () => {
-
   // Create a client
   const queryClient = new QueryClient();
   const navigate = useNavigate();
 
-  const { setUser, token, setToken, setMusics, setCurrentTrack, logout } = useMainStore(
-    (state) => state
-  );
+  const { setUser, token, setToken, setMusics, setCurrentTrack, logout } =
+    useMainStore((state) => state);
 
   async function initializeStore() {
     try {
@@ -30,31 +28,29 @@ const Root = () => {
         navigate("/");
       }
       // If not found navigate to signin
-      else{
+      else {
         setToken(null);
         navigate("/auth/signin");
       }
 
       // Get user from backend using token
       const userFetched = await getUser();
-      if(userFetched.statusCode === 401){
+      if (userFetched.statusCode === 401) {
+        setToken(null);
+        navigate("/auth/signin");
+        logout();
+      } else setUser(userFetched);
+
+      // Get musics from backend using
+      const music = await getUserMusics();
+      if (music.statusCode === 401) {
         setToken(null);
         navigate("/auth/signin");
         logout();
       }
-      else setUser(userFetched);
-
-      // Get musics from backend using
-      const music = await getUserMusics();
-      if(music.statusCode === 401){
-        setToken(null);
-        navigate("/auth/signin");
-        logout()
-      }
-      setMusics(music)
+      setMusics(music);
       setCurrentTrack(music[0]);
-     
-    } catch (e:any) {
+    } catch (e: any) {
       console.error(e);
     }
   }
@@ -65,15 +61,13 @@ const Root = () => {
     }
   }, [token]);
 
-
-  
-
   return (
     <div className="h-screen max-h-screen flex">
-     
       <QueryClientProvider client={queryClient}>
-        <Sidebar />
-     
+        <div className="w-80">
+          <Sidebar />
+        </div>
+
         <div className="flex-grow">
           <Outlet />
         </div>
@@ -81,7 +75,6 @@ const Root = () => {
         <Player />
         <Toaster position="top-left" richColors />
       </QueryClientProvider>
-   
     </div>
   );
 };
