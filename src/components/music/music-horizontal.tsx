@@ -14,6 +14,7 @@ import useLoggedIn from "../../hooks/useLoggedIn.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { shortenTitleToMaxLength } from "../../lib/utils.ts";
 import { motion } from "framer-motion";
+import { Fragment } from "react/jsx-runtime";
 
 const MusicHorizontal = ({ music }: { music: Music }) => {
   const { currentTrack, setCurrentTrack, isPlaying, removeMusic } =
@@ -44,7 +45,7 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
       className="grid grid-cols-6 gap-1  bg-background p-3 justify-between items-center space-x-10 space-y-2 overflow-hidden hover:bg-secondary/30 last:border-b border-secondary"
     >
       <section className="col-span-1  flex items-center justify-start w-60  gap-6">
-        <div className="mx-2 flex justify-center w-14">
+        <div className="mx-2 flex justify-center bg w-14">
           {currentTrack && currentTrack.id == music.id && isPlaying ? (
             <Button
               variant={"ghost"}
@@ -80,10 +81,10 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
         </div>
       </section>
 
-      <h1 className="text-white font-medium">
+      <h1 className="text-white   font-medium">
         {shortenTitleToMaxLength(music.title)}
       </h1>
-      <div className="flex items-center space-x-10">
+      <div className="flex  items-center space-x-10">
         <h1 className=" font-light text-sm text-muted-foreground">
           {DateTime.fromISO(music.createdAt)
             .setLocale("fr")
@@ -91,29 +92,30 @@ const MusicHorizontal = ({ music }: { music: Music }) => {
         </h1>
       </div>
 
-      <div className="flex items-center space-x-10">
+      <div className="flex  items-center  space-x-10">
         <h1 className=" font-light text-sm text-muted-foreground">
           {music.creator}
         </h1>
       </div>
 
-      <div className="flex items-center space-x-10">
+      <div className="flex items-center  space-x-10">
         {music.isLive ? <Badge>Live</Badge> : null}
       </div>
+      <div className={"px-4 flex-grow  flex justify-end space-x-4"}>
+        {useLoggedIn() && (
+          <Fragment>
+            <Button
+              variant={"ghost"}
+              className="text-muted-foreground border rounded-full h-10 p-0 border-secondary w-10"
+              onClick={() => deleteMusic(music.id)}
+            >
+              <TrashIcon className="w-5 h-5 text-muted-foreground" />
+            </Button>
 
-      {useLoggedIn() && (
-        <div className={"px-4 flex-grow  flex justify-end space-x-4"}>
-          <Button
-            variant={"ghost"}
-            className="text-muted-foreground border rounded-full h-10 p-0 border-secondary w-10"
-            onClick={() => deleteMusic(music.id)}
-          >
-            <TrashIcon className="w-5 h-5 text-muted-foreground" />
-          </Button>
-
-          <EditMusic music={music} buttonType="icon" />
-        </div>
-      )}
+            <EditMusic music={music} buttonType="icon" />
+          </Fragment>
+        )}
+      </div>
     </motion.div>
   );
 };
