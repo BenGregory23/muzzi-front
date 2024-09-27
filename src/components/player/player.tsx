@@ -17,6 +17,7 @@ import { SpeakerLoudIcon } from "@radix-ui/react-icons";
 import { shortenTitleToMaxLength } from "../../lib/utils.ts";
 import YoutubeWrapper from "./YoutubeWrapper.tsx";
 import { motion } from "framer-motion";
+import TimeDisplay from "./time-display.tsx";
 
 const Player = () => {
   const { currentTrack, isPlaying, next, previous } = useMainStore(
@@ -144,15 +145,7 @@ const Player = () => {
         </div>
 
         <div className="flex items-center space-x-2 flex-grow">
-          {/* 
-          {
-            currentTime ? (
-              <span className="text-xs">{  Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format(((currentTime/60)/60))}:{ Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format((currentTime/60) % 60) }:{ Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format((currentTime % 60))
-              }</span>
-            ) : (
-              <span className="text-xs">0:0:0</span>
-            )
-          } */}
+          <TimeDisplay seconds={currentTime} />
 
           <Slider
             className="w-full"
@@ -164,6 +157,7 @@ const Player = () => {
             onValueChange={(e) => setCurrentTimeOnPlayer(e.at(0) as number)}
           />
           {/* <span className="text-xs">{((duration/1000)/60).toFixed(4)}</span> */}
+          <TimeDisplay seconds={duration} />
         </div>
 
         <div className="flex items-center space-x-4">
